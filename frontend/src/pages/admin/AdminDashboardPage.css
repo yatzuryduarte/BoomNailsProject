@@ -1,0 +1,366 @@
+/* DASHBOARD BOOM NAILS */
+
+.bn-dashboard-page {
+  flex: 1;
+  min-width: 0;
+  width: calc(100% - 220px);
+  min-height: 100vh;
+  padding: 32px;
+  background: #f8fbff;
+  color: #09265e;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.bn-dashboard-header {
+  margin-bottom: 30px;
+}
+
+.bn-dashboard-header > p {
+  color: #08a7e5;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  margin-bottom: 14px;
+}
+
+.bn-dashboard-header h1 {
+  font-size: 32px;
+  font-weight: 800;
+  margin: 0 0 10px;
+  color: #09265e;
+}
+
+.bn-dashboard-header h1 span {
+  color: #f72f91;
+}
+
+.bn-dashboard-header > span {
+  color: #8194b5;
+  font-size: 14px;
+}
+
+
+.bn-dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 26px 0 22px;
+}
+
+.bn-dashboard-stats--main article {
+  min-width: 0;
+  min-height: 105px;
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid #f1e5f1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  box-shadow: 0 4px 14px rgba(24, 54, 100, 0.06);
+  background: linear-gradient(135deg, #ffe6f2, #fff8fc);
+}
+
+.bn-dashboard-stats--main article:nth-child(2) {
+  background: linear-gradient(135deg, #e5f7ff, #f8fcff);
+}
+
+.bn-dashboard-stats--main article:nth-child(3) {
+  background: linear-gradient(135deg, #fff0f7, #fffaff);
+}
+
+.bn-dashboard-stats--main article:nth-child(4) {
+  background: linear-gradient(135deg, #e8f8ff, #f8fcff);
+}
+
+.bn-dashboard-stats--main article span {
+  color: #8295b5;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.bn-dashboard-stats--main article strong {
+  color: #09265e;
+  font-size: 23px;
+  font-weight: 800;
+}
+
+@media (max-width: 900px) {
+  .bn-dashboard-stats--main {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .bn-dashboard-stats--main {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+.bn-dashboard-recent {
+  padding: 24px;
+  background: white;
+  border: 1px solid #e7effa;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(24, 54, 100, 0.08);
+}
+
+.bn-dashboard-recent h2 {
+  font-size: 19px;
+  margin: 0 0 22px;
+  color: #09265e;
+}
+
+.bn-dashboard-recent article {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr auto;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 10px;
+  border-bottom: 1px solid #edf1f8;
+}
+
+.bn-dashboard-recent article:last-child {
+  border-bottom: none;
+}
+
+.bn-dashboard-recent article div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bn-dashboard-recent article div strong {
+  font-size: 13px;
+  color: #09265e;
+}
+
+.bn-dashboard-recent article div span,
+.bn-dashboard-recent article > span {
+  font-size: 12px;
+  color: #8294b3;
+}
+
+.bn-dashboard-recent article > strong {
+  font-size: 13px;
+  color: #09265e;
+}
+
+.bn-dashboard-recent article a {
+  text-decoration: none;
+  color: #078ed0;
+  background: #e8f6ff;
+  border: 1px solid #c9eaff;
+  padding: 9px 13px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.bn-dashboard-recent article a:hover {
+  background: #d9f0ff;
+}
+
+@media (max-width: 1000px) {
+  .bn-dashboard-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 650px) {
+  .bn-dashboard-page {
+    padding: 18px;
+  }
+
+  .bn-dashboard-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .bn-dashboard-recent article {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+
+/* PRODUCTOS MÁS VENDIDOS */
+.bn-dashboard-top-products {
+  background: #ffffff;
+  border: 1px solid #e5edfa;
+  border-radius: 16px;
+  padding: 24px;
+  margin: 24px 0;
+  box-shadow: 0 4px 16px rgba(24, 54, 100, 0.06);
+}
+
+.bn-dashboard-top-products h2 {
+  color: #09265e;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+
+.bn-dashboard-top-products > p {
+  color: #8295b5;
+  font-size: 13px;
+  margin: 0 0 18px;
+}
+
+.bn-dashboard-top-products__list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bn-dashboard-top-products__list article {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 16px;
+  background: #f8fbff;
+  border: 1px solid #edf2fb;
+  border-radius: 12px;
+}
+
+.bn-dashboard-top-products__position {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #ffe6f2;
+  color: #f72f91;
+  font-weight: 800;
+}
+
+.bn-dashboard-top-products__list article div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.bn-dashboard-top-products__list article div strong {
+  color: #09265e;
+  font-size: 14px;
+}
+
+.bn-dashboard-top-products__list article div span {
+  color: #91a0ba;
+  font-size: 12px;
+}
+
+.bn-dashboard-top-products__list article > strong {
+  color: #08a7e5;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+/* DISTRIBUCIÓN DE ANALÍTICAS */
+.bn-dashboard-analytics {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 20px;
+  align-items: stretch;
+  margin: 24px 0;
+}
+
+/* PANEL DE VENTAS SEMANALES */
+.bn-dashboard-weekly-sales {
+  background: #ffffff;
+  border: 1px solid #e5edfa;
+  border-radius: 16px;
+  padding: 24px;
+  min-width: 0;
+  box-shadow: 0 4px 16px rgba(24, 54, 100, 0.06);
+}
+
+.bn-dashboard-weekly-sales h2 {
+  color: #09265e;
+  font-size: 18px;
+  margin: 0 0 6px;
+}
+
+.bn-dashboard-weekly-sales > p {
+  color: #8295b5;
+  font-size: 12px;
+  margin: 0 0 20px;
+}
+
+.bn-dashboard-chart-placeholder {
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #f8fbff;
+  color: #91a0ba;
+  font-size: 13px;
+}
+
+/* PANEL DE PRODUCTOS */
+.bn-dashboard-analytics .bn-dashboard-top-products {
+  margin: 0;
+  min-width: 0;
+}
+
+.bn-dashboard-analytics .bn-dashboard-top-products__list article {
+  padding: 10px 12px;
+}
+
+/* ADAPTACIÓN A PANTALLAS PEQUEÑAS */
+@media (max-width: 1000px) {
+  .bn-dashboard-analytics {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* TARJETAS PRINCIPALES CON ICONOS */
+.bn-dashboard-stats--main article {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 14px;
+  min-height: 104px;
+  padding: 18px;
+}
+
+.bn-stat-icon {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #b9edff, #e4f8ff);
+  color: #08a7e5;
+  border-radius: 12px;
+}
+
+.bn-stat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.bn-stat-info span {
+  color: #7589a9;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.bn-stat-info strong {
+  color: #09265e;
+  font-size: 21px;
+  font-weight: 800;
+}
+
+.bn-stat-card {
+  box-sizing: border-box;
+}
