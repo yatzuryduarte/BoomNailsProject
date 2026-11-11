@@ -25,6 +25,7 @@ const formatDate = (value) => {
 
 const statusLabels = {
   PAGO_EN_REVISION: "Pago en revisión",
+  RECHAZADO: "Rechazado",
   PEDIDO_CONFIRMADO: "Confirmado",
   EN_BODEGA: "En bodega",
   EMPACADO: "Empacado",
@@ -159,22 +160,64 @@ export default function AdminOrdersPage() {
   fetchOrderItems();
 }, [selectedOrderId, credentials]);
 
-  const totalSales = orders.reduce(
-    (sum, order) => sum + Number(order.total || 0),
-    0
-  );
+// ========================================
+// ESTADOS QUE CUENTAN COMO VENTA VÁLIDA
+// ========================================
 
-  const pendingOrders = orders.filter(
-    (order) => order.status === "PAGO_EN_REVISION"
-  ).length;
+const validSaleStatuses = [
+  "PEDIDO_CONFIRMADO",
+  "EN_BODEGA",
+  "EMPACADO",
+  "DESPACHADO",
+  "ENTREGADO",
+];
 
-  const confirmedOrders = orders.filter(
-    (order) => order.status === "PEDIDO_CONFIRMADO"
-  ).length;
+// ========================================
+// PEDIDOS QUE CUENTAN COMO VENTAS
+// ========================================
 
-  const processingOrders = orders.filter((order) =>
-    ["EN_BODEGA", "EMPACADO", "DESPACHADO"].includes(order.status)
-  ).length;
+const validOrders = orders.filter((order) =>
+  validSaleStatuses.includes(order.status)
+);
+
+// ========================================
+// VENTAS TOTALES
+// ========================================
+
+const totalSales = validOrders.reduce(
+  (sum, order) => sum + Number(order.total || 0),
+  0
+);
+
+// ========================================
+// TOTAL DE PEDIDOS VÁLIDOS
+// ========================================
+
+const totalOrders = validOrders.length;
+
+// ========================================
+// PAGOS PENDIENTES
+// ========================================
+
+const pendingOrders = orders.filter(
+  (order) => order.status === "PAGO_EN_REVISION"
+).length;
+
+// ========================================
+// PEDIDOS CONFIRMADOS
+// ========================================
+
+const confirmedOrders = orders.filter(
+  (order) => order.status === "PEDIDO_CONFIRMADO"
+).length;
+
+// ========================================
+// PEDIDOS EN PROCESO
+// ========================================
+
+const processingOrders = orders.filter((order) =>
+  ["EN_BODEGA", "EMPACADO", "DESPACHADO"].includes(order.status)
+).length;
 
   return (
     <main className="bn-orders-layout">
@@ -221,7 +264,7 @@ export default function AdminOrdersPage() {
               <span>Total de pedidos</span>
               <span className="bn-orders-stat__icon">▤</span>
             </div>
-            <strong>{orders.length}</strong>
+            <strong>{totalOrders}</strong>
             <small>Pedidos registrados</small>
           </article>
 
@@ -282,6 +325,7 @@ export default function AdminOrdersPage() {
                 <option value="DESPACHADO">Despachados</option>
                 <option value="ENTREGADO">Entregados</option>
                 <option value="CANCELADO">Cancelados</option>
+                <option value="RECHAZADO">Rechazados</option>
               </select>
             </div>
 
@@ -363,7 +407,7 @@ export default function AdminOrdersPage() {
 
             <div className="bn-orders-list__footer">
               <span>
-                {confirmedOrders} pedidos confirmados de {orders.length}
+                {totalOrders} pedidos válidos de {orders.length} registrados
               </span>
               <span>BOOM NAILS · ADMIN</span>
             </div>

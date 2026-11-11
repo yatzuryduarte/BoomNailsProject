@@ -31,9 +31,12 @@ public class TopSellingProductRepositoryMySqlAdapter
             FROM detalle_pedido dp
             INNER JOIN pedido p
                 ON dp.id_pedido = p.id_pedido
-            WHERE p.estado NOT IN (
-                'CANCELADO',
-                'PAGO_EN_REVISION'
+            WHERE p.estado IN (
+                'PEDIDO_CONFIRMADO',
+                'EN_BODEGA',
+                'EMPACADO',
+                'DESPACHADO',
+                'ENTREGADO'
             )
             GROUP BY dp.nombre_snapshot
             ORDER BY unidades_vendidas DESC

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import './CheckoutPage.css';
 
+
 function formatPrice(price) {
   return Number(price).toLocaleString('es-CO', {
     style: 'currency',
@@ -48,51 +49,37 @@ function CheckoutPage() {
       return;
     }
 
-    if (paymentMethod === 'transferencia' && !comprobante) {
-      setError('Adjunta el comprobante de transferencia para continuar.');
-      return;
-    }
-
-    if (
-      paymentMethod === 'transferencia' &&
-      comprobante &&
-      !['image/jpeg', 'image/png', 'application/pdf'].includes(comprobante.type)
-    ) {
-      setError('El comprobante debe ser una imagen JPG, PNG o un PDF.');
-      return;
-    }
-
-    if (
-      paymentMethod === 'transferencia' &&
-      comprobante &&
-      comprobante.size > 5 * 1024 * 1024
-    ) {
-      setError('El comprobante no puede superar los 5 MB.');
-      return;
-    }
 
     
 if (paymentMethod === 'whatsapp') {
   const lines = cartItems.map(
     (item) =>
-      `- ${item.name} (${item.presentationName}) x ${item.quantity}: ${formatPrice(item.price * item.quantity)}`,
+      `- ${item.name} (${item.presentationName}) x ${item.quantity}: ${formatPrice(item.price * item.quantity)}`
   );
 
   const message = [
     'Hola, quiero consultar este pedido de Boom Nails:',
     ...lines,
-    `Subtotal: ${formatPrice(totalPrice)}`,
+    `Total: ${formatPrice(totalPrice)}`,
     '',
     `Nombre: ${form.nombre}`,
+    `Teléfono: ${form.telefono}`,
     `Ciudad: ${form.ciudad}`,
     `Dirección: ${form.direccion}`,
+    `Correo: ${form.correo}`,
   ].join('\n');
 
-  window.open(
-    `https://wa.me/message/2H5Q65Q5L4RCJ1`,
-    '_blank',
-    'noopener,noreferrer',
-  );
+  const whatsappUrl =
+    `https://wa.me/message/2H5Q65Q5L4RCJ1?text=${encodeURIComponent(message)}`;
+
+  window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+  return;
+}
+
+if (paymentMethod === 'transferencia') {
+  navigate('/checkout/transferencia', {
+    state: { form },
+  });
   return;
 }
 
@@ -186,13 +173,12 @@ if (paymentMethod === 'whatsapp') {
               required
             />
 
-            <label htmlFor="documento">Documento de identidad *</label>
+            <label htmlFor="documento">Documento de identidad (opcional)</label>
             <input
               id="documento"
               name="documento"
               value={form.documento}
               onChange={handleChange}
-              required
             />
 
             <label htmlFor="correo">Correo electrónico *</label>
@@ -295,7 +281,7 @@ if (paymentMethod === 'whatsapp') {
               />
               <span>
                 <strong>Transferencia bancaria</strong>
-                <small>Adjunta el comprobante para que el administrador lo revise.</small>
+                <small>Consulta los datos bancarios y adjunta tu comprobante en el siguiente paso.</small>
               </span>
             </label>
 
@@ -314,73 +300,7 @@ if (paymentMethod === 'whatsapp') {
             </label>
 
             
-{paymentMethod === 'transferencia' && (
-  <div className="bank-payment-details">
-    <h3>Datos para realizar tu transferencia</h3>
 
-    <img
-      className="bank-qr-image"
-      src="/images/qr-bancolombia.jpeg"
-      alt="Código QR de pago de Boom Nails por Bancolombia"
-    />
-
-    <p className="bank-payment-instructions">
-      Escanea el QR desde la aplicación de tu banco o utiliza los datos
-      bancarios que aparecen a continuación.
-    </p>
-
-    <div className="bank-data-row">
-      <span>Banco</span>
-      <strong>Bancolombia</strong>
-    </div>
-
-    <div className="bank-data-row">
-      <span>Tipo de cuenta</span>
-      <strong>Cuenta de ahorros</strong>
-    </div>
-
-    <div className="bank-data-row">
-      <span>Número de cuenta</span>
-      <strong>58200021868</strong>
-      <button
-        type="button"
-        onClick={() =>
-          navigator.clipboard.writeText('58200021868')
-        }
-      >
-        Copiar
-      </button>
-    </div>
-
-    <div className="bank-data-row">
-      <span>Titular</span>
-      <strong>Yatzury Niño</strong>
-    </div>
-
-    <p className="bank-payment-warning">
-      Verifica el destinatario en tu aplicación bancaria antes de confirmar
-      el pago. El pedido quedará pendiente hasta validar la transferencia.
-    </p>
-
-    <div className="receipt-upload">
-      <label htmlFor="comprobante">
-        Comprobante de transferencia (JPG, PNG o PDF, máximo 5 MB) *
-      </label>
-      <input
-        id="comprobante"
-        type="file"
-        accept=".jpg,.jpeg,.png,.pdf"
-        onChange={(event) =>
-          setComprobante(event.target.files?.[0] || null)
-        }
-        required
-      />
-      {comprobante && (
-        <p>Archivo seleccionado: {comprobante.name}</p>
-      )}
-    </div>
-  </div>
-)}
 
           </section>
 
@@ -395,11 +315,9 @@ if (paymentMethod === 'whatsapp') {
             className="checkout-submit-button"
             disabled={enviando}
             >
-                {enviando
-                    ? 'Enviando pedido...'
-                    : paymentMethod === 'whatsapp'
-                    ? 'Consultar por WhatsApp'
-                    : 'Enviar comprobante'}
+                {paymentMethod === 'whatsapp'
+                  ? 'Continuar por WhatsApp'
+                  : 'Continuar a transferencia'}
           </button>
         </form>
 
