@@ -1,4 +1,3 @@
-
 package com.boomnails.adapter.out.persistence;
 
 import com.boomnails.domain.model.WeeklySale;
@@ -20,16 +19,26 @@ public class WeeklySalesRepositoryMySqlAdapter
 
     @Override
     public List<WeeklySale> findWeeklySales() {
+
         return jdbcTemplate.query(
             """
             SELECT
-                DATE(fecha_confirmacion) AS fecha_venta,
-                SUM(importe) AS total_ventas
+                DATE(pago.fecha_confirmacion) AS fecha_venta,
+                SUM(pago.importe) AS total_ventas
             FROM pago
-            WHERE estado = 'APROBADO'
-              AND fecha_confirmacion >= CURDATE() - INTERVAL 6 DAY
-              AND fecha_confirmacion < CURDATE() + INTERVAL 1 DAY
-            GROUP BY DATE(fecha_confirmacion)
+            INNER JOIN pedido
+                ON pago.id_pedido = pedido.id_pedido
+            WHERE pago.estado = 'APROBADO'
+              AND pedido.estado IN (
+                  'PEDIDO_CONFIRMADO',
+                  'EN_BODEGA',
+                  'EMPACADO',
+                  'DESPACHADO',
+                  'ENTREGADO'
+              )
+              AND pago.fecha_confirmacion >= CURDATE() - INTERVAL 6 DAY
+              AND pago.fecha_confirmacion < CURDATE() + INTERVAL 1 DAY
+            GROUP BY DATE(pago.fecha_confirmacion)
             ORDER BY fecha_venta
             """,
             (rs, rowNum) -> new WeeklySale(

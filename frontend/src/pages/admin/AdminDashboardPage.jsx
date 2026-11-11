@@ -173,40 +173,80 @@ useEffect(() => {
   fetchProducts();
 }, []);
 
-  const statistics = useMemo(() => {
-    const totalSales = orders
-      .filter((order) => order.status !== "CANCELADO")
-      .reduce((sum, order) => sum + Number(order.total || 0), 0);
+const statistics = useMemo(() => {
+  // Estados que SÍ representan una venta válida
+  const validSaleStatuses = [
+    "PEDIDO_CONFIRMADO",
+    "EN_BODEGA",
+    "EMPACADO",
+    "DESPACHADO",
+    "ENTREGADO",
+  ];
 
-    const pendingOrders = orders.filter(
-      (order) => order.status === "PAGO_EN_REVISION"
-    ).length;
+  // Filtrar únicamente pedidos que cuentan como ventas
+  const validSales = orders.filter((order) =>
+    validSaleStatuses.includes(order.status)
+  );
 
-    const processingOrders = orders.filter((order) =>
-      ["PEDIDO_CONFIRMADO", "EN_BODEGA", "EMPACADO", "DESPACHADO"].includes(
-        order.status
+  // =========================
+  // VENTAS TOTALES
+  // =========================
+  const totalSales = validSales.reduce(
+    (sum, order) => sum + Number(order.total || 0),
+    0
+  );
+
+  // =========================
+  // PEDIDOS VÁLIDOS
+  // =========================
+  const totalOrders = validSales.length;
+
+  // =========================
+  // PEDIDOS PENDIENTES
+  // =========================
+  const pendingOrders = orders.filter(
+    (order) => order.status === "PAGO_EN_REVISION"
+  ).length;
+
+  // =========================
+  // PEDIDOS EN PROCESO
+  // =========================
+  const processingOrders = orders.filter((order) =>
+    [
+      "PEDIDO_CONFIRMADO",
+      "EN_BODEGA",
+      "EMPACADO",
+      "DESPACHADO",
+    ].includes(order.status)
+  ).length;
+
+  // =========================
+  // PEDIDOS ENTREGADOS
+  // =========================
+  const deliveredOrders = orders.filter(
+    (order) => order.status === "ENTREGADO"
+  ).length;
+
+  // =========================
+  // CLIENTES
+  // =========================
+  const totalCustomers = new Set(
+    validSales
+      .map((order) =>
+        order.customerEmail?.trim().toLowerCase()
       )
-    ).length;
+      .filter(Boolean)
+  ).size;
 
-    const deliveredOrders = orders.filter(
-      (order) => order.status === "ENTREGADO"
-    ).length;
-
-    const totalCustomers = new Set(
-  orders
-    .map((order) => order.customerEmail?.trim().toLowerCase())
-    .filter(Boolean)
-    ).size;
-
-    return {
-      totalSales,
-      totalOrders: orders.length,
-      pendingOrders,
-      processingOrders,
-      deliveredOrders,
-      totalCustomers,
-    };
-  }, [orders]);
+  return {
+    totalSales,
+    totalOrders,
+    pendingOrders,
+    processingOrders,
+    deliveredOrders,
+    totalCustomers,
+  };
+}, [orders]);
 
 
 const chartData = useMemo(() => {
