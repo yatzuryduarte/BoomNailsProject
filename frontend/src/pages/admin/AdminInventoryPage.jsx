@@ -1,12 +1,13 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useAdminAuth } from "../../context/AdminAuthContext";
+
 import AdminSidebar from "./AdminSidebar";
-import AdminAccessDenied from "./AdminAccessDenied";
+
 import "./AdminPaymentsPage.css";
 
-const API_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:8080/api";
+
+import { apiRequest } from "../../services/api";
 
 const money = (value) =>
   new Intl.NumberFormat("es-CO", {
@@ -16,7 +17,7 @@ const money = (value) =>
   }).format(value ?? 0);
 
 function AdminInventoryPage() {
-  const { credentials, logout } = useAdminAuth();
+    const { logout } = useAdminAuth();
 
   const [inventory, setInventory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -67,112 +68,59 @@ function AdminInventoryPage() {
     });
 
   const loadInventory = async () => {
-    if (!credentials) return;
-
     setLoading(true);
     setError("");
 
     try {
-      const response = await fetch(`${API_URL}/admin/inventory`, {
-        headers: {
-          Authorization: `Basic ${btoa(
-            `${credentials.email}:${credentials.password}`
-          )}`,
-        },
-      });
+        const data = await apiRequest("/admin/inventory");
 
-      if (response.status === 401 || response.status === 403) {
-        logout();
-        throw new Error("Tu sesión no está autorizada. Ingresa nuevamente.");
-      }
-
-      if (!response.ok) {
-        throw new Error("No fue posible consultar el inventario.");
-      }
-
-      const data = await response.json();
-      setInventory(data);
+        setInventory(data);
     } catch (err) {
-      setError(err.message || "No se pudo conectar con el servidor.");
+        setError(
+        err.message || "No se pudo conectar con el servidor."
+        );
     } finally {
-      setLoading(false);
-    }
-  };
-
-  const loadSuppliers = async () => {
-    if (!credentials) return;
-
-    try {
-        const response = await fetch(`${API_URL}/admin/suppliers`, {
-        headers: {
-            Authorization: `Basic ${btoa(
-            `${credentials.email}:${credentials.password}`
-            )}`,
-        },
-        });
-
-        if (response.status === 401 || response.status === 403) {
-        logout();
-        throw new Error("Tu sesión no está autorizada.");
-        }
-
-        if (!response.ok) {
-        throw new Error("No fue posible consultar los proveedores.");
-        }
-
-        const data = await response.json();
-        setSuppliers(data);
-    } catch (err) {
-        setPurchaseError(err.message || "Error al cargar proveedores.");
+        setLoading(false);
     }
     };
 
+  const loadSuppliers = async () => {
+  try {
+    const data = await apiRequest("/admin/suppliers");
+
+    setSuppliers(data);
+  } catch (err) {
+    setSupplierError(
+      err.message || "Error al cargar proveedores."
+    );
+  }
+};
+
     const loadMovements = async () => {
-        if (!credentials) return;
+  setLoadingMovements(true);
+  setMovementError("");
 
-        setLoadingMovements(true);
-        setMovementError("");
+  try {
+    const data = await apiRequest(
+      "/admin/inventory/movements"
+    );
 
-        try {
-            const response = await fetch(
-            `${API_URL}/admin/inventory/movements`,
-            {
-                headers: {
-                Authorization: `Basic ${btoa(
-                    `${credentials.email}:${credentials.password}`
-                )}`,
-                },
-            }
-            );
-
-            if (response.status === 401 || response.status === 403) {
-            logout();
-            throw new Error("Tu sesión no está autorizada.");
-            }
-
-            if (!response.ok) {
-            throw new Error("No fue posible consultar el historial.");
-            }
-
-            const data = await response.json();
-            setMovements(data);
-        } catch (err) {
-            setMovementError(
-            err.message || "Error al cargar los movimientos."
-            );
-        } finally {
-            setLoadingMovements(false);
-        }
-        };
+    setMovements(data);
+  } catch (err) {
+    setMovementError(
+      err.message || "Error al cargar movimientos."
+    );
+  } finally {
+    setLoadingMovements(false);
+  }
+};
 
     useEffect(() => {
-    if (credentials) {
         loadInventory();
         loadSuppliers();
         loadMovements();
-    }
+    
     // La carga inicial se realiza al entrar al módulo.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
   const filteredInventory = useMemo(() => {
@@ -234,7 +182,8 @@ function AdminInventoryPage() {
         (item) => item.productActive && item.presentationActive
     ).length;
 
-    const imageBaseUrl = API_URL.replace(/\/api\/?$/, "");
+   const imageBaseUrl =
+    (import.meta.env.VITE_API_URL || "").replace(/\/api\/?$/, "");
 
     const handlePurchaseFieldChange = (event) => {
     const { name, value } = event.target;
@@ -332,38 +281,24 @@ function AdminInventoryPage() {
         setSavingPurchase(true);
 
         try {
-            const response = await fetch(`${API_URL}/admin/inventory/purchases`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Basic ${btoa(
-                `${credentials.email}:${credentials.password}`
-                )}`,
-            },
-            body: JSON.stringify({
+            const data = await apiRequest(
+            "/admin/inventory/purchases",
+            {
+                method: "POST",
+                body: JSON.stringify({
                 supplierId: Number(purchaseForm.supplierId),
                 invoiceNumber: purchaseForm.invoiceNumber,
-                purchaseDate: `${purchaseForm.purchaseDate}:00`,
+                purchaseDate: purchaseForm.purchaseDate,
                 notes: purchaseForm.notes,
                 lines: purchaseForm.lines.map((line) => ({
-                presentationId: Number(line.presentationId),
-                quantity: Number(line.quantity),
-                unitCost: Number(line.unitCost),
-                notes: line.notes,
+                    presentationId: Number(line.presentationId),
+                    quantity: Number(line.quantity),
+                    unitCost: Number(line.unitCost),
+                    notes: line.notes,
                 })),
-            }),
-            });
-
-            const data = await response.json();
-
-            if (response.status === 401 || response.status === 403) {
-            logout();
-            throw new Error("Tu sesión no está autorizada. Ingresa nuevamente.");
+                }),
             }
-
-            if (!response.ok) {
-            throw new Error(data.message || data.error || "No se pudo registrar la compra.");
-            }
+            );
 
             setPurchaseMessage(
             `Compra registrada correctamente. Número de compra: ${data.idCompra}`
@@ -387,6 +322,7 @@ function AdminInventoryPage() {
             });
 
             await loadInventory();
+            await loadMovements();
         } catch (err) {
             setPurchaseError(err.message || "Error al registrar la compra.");
         } finally {
@@ -395,97 +331,88 @@ function AdminInventoryPage() {
         };
 
         const handleRegisterExit = async (event) => {
-            event.preventDefault();
+    event.preventDefault();
 
-            setExitError("");
-            setExitMessage("");
+    setExitError("");
+    setExitMessage("");
 
-            if (!exitForm.presentationId) {
-                setExitError("Selecciona una presentación.");
-                return;
-            }
+    if (!exitForm.presentationId) {
+        setExitError("Selecciona una presentación.");
+        return;
+    }
 
-            if (
-                !Number.isInteger(Number(exitForm.quantity)) ||
-                Number(exitForm.quantity) <= 0
-            ) {
-                setExitError("La cantidad debe ser un número entero mayor que cero.");
-                return;
-            }
+    if (
+        !Number.isInteger(Number(exitForm.quantity)) ||
+        Number(exitForm.quantity) <= 0
+    ) {
+        setExitError(
+            "La cantidad debe ser un número entero mayor que cero."
+        );
+        return;
+    }
 
-            if (!exitForm.reason) {
-                setExitError("Selecciona el motivo de la salida.");
-                return;
-            }
+    if (!exitForm.reason) {
+        setExitError("Selecciona el motivo de la salida.");
+        return;
+    }
 
-            const selectedItem = inventory.find(
-                (item) =>
-                item.presentationId === Number(exitForm.presentationId)
-            );
+    const selectedItem = inventory.find(
+        (item) =>
+            item.presentationId === Number(exitForm.presentationId)
+    );
 
-            if (!selectedItem) {
-                setExitError("No se encontró la presentación seleccionada.");
-                return;
-            }
+    if (!selectedItem) {
+        setExitError(
+            "No se encontró la presentación seleccionada."
+        );
+        return;
+    }
 
-            if (Number(exitForm.quantity) > selectedItem.stock) {
-                setExitError(
-                `Stock insuficiente. Disponibles: ${selectedItem.stock} unidades.`
-                );
-                return;
-            }
+    if (Number(exitForm.quantity) > selectedItem.stock) {
+        setExitError(
+            `Stock insuficiente. Disponibles: ${selectedItem.stock} unidades.`
+        );
+        return;
+    }
 
-            setSavingExit(true);
+    setSavingExit(true);
 
-            try {
-                const response = await fetch(`${API_URL}/admin/inventory/exits`, {
+    try {
+        const data = await apiRequest(
+            "/admin/inventory/exits",
+            {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Basic ${btoa(
-                    `${credentials.email}:${credentials.password}`
-                    )}`,
-                },
                 body: JSON.stringify({
-                    presentationId: Number(exitForm.presentationId),
+                    presentationId: Number(
+                        exitForm.presentationId
+                    ),
                     quantity: Number(exitForm.quantity),
                     reason: exitForm.reason,
                     reference: exitForm.reference,
                     notes: exitForm.notes,
                 }),
-                });
-
-                const data = await response.json();
-
-                if (response.status === 401 || response.status === 403) {
-                logout();
-                throw new Error("Tu sesión no está autorizada.");
-                }
-
-                if (!response.ok) {
-                throw new Error(
-                    data.message || data.error || "No se pudo registrar la salida."
-                );
-                }
-
-                setExitMessage(
-                `Salida registrada correctamente. Movimiento: ${data.idMovimiento}`
-                );
-
-                setShowExitModal(false);
-                resetExitForm();
-
-                await loadInventory();
-            } catch (err) {
-                setExitError(err.message || "Error al registrar la salida.");
-            } finally {
-                setSavingExit(false);
             }
-            };
+        );
 
-  if (!credentials) {
-    return <AdminAccessDenied />;
-  }
+        setExitMessage(
+            `Salida registrada correctamente. Movimiento: ${data.idMovimiento}`
+        );
+
+        setShowExitModal(false);
+        resetExitForm();
+
+        await loadInventory();
+        await loadMovements();
+    } catch (err) {
+        setExitError(
+            err.message || "Error al registrar la salida."
+        );
+    } finally {
+        setSavingExit(false);
+    }
+};
+
+
 
   return (
     <main className="bn-orders-layout">

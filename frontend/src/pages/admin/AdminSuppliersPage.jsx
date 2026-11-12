@@ -1,15 +1,11 @@
-
 import { useEffect, useMemo, useState } from "react";
 import { useAdminAuth } from "../../context/AdminAuthContext";
 import AdminSidebar from "./AdminSidebar";
-import AdminAccessDenied from "./AdminAccessDenied";
 import "./AdminPaymentsPage.css";
-
-const API_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:8080/api";
+import { apiRequest } from "../../services/api";
 
 function AdminSuppliersPage() {
-  const { credentials, logout } = useAdminAuth();
+  const { logout } = useAdminAuth();
 
   const [suppliers, setSuppliers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,47 +26,27 @@ function AdminSuppliersPage() {
     notes: "",
   });
 
-  const authHeaders = {
-    Authorization: `Basic ${btoa(
-      `${credentials?.email}:${credentials?.password}`
-    )}`,
-  };
 
   const loadSuppliers = async () => {
-    if (!credentials) return;
+  setLoading(true);
+  setError("");
 
-    setLoading(true);
-    setError("");
+  try {
+    const data = await apiRequest("/admin/suppliers/all");
 
-    try {
-      const response = await fetch(`${API_URL}/admin/suppliers/all`, {
-        headers: authHeaders,
-      });
-
-      if (response.status === 401 || response.status === 403) {
-        logout();
-        throw new Error("Tu sesión no está autorizada. Ingresa nuevamente.");
-      }
-
-      if (!response.ok) {
-        throw new Error("No fue posible consultar los proveedores.");
-      }
-
-      const data = await response.json();
-      setSuppliers(data);
-    } catch (err) {
-      setError(err.message || "No se pudo conectar con el servidor.");
-    } finally {
-      setLoading(false);
-    }
-  };
+    setSuppliers(data);
+  } catch (err) {
+    setError(
+      err.message || "No se pudo conectar con el servidor."
+    );
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
-    if (credentials) {
-      loadSuppliers();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  loadSuppliers();
+}, []);
 
   const filteredSuppliers = useMemo(() => {
   const term = searchTerm.trim().toLowerCase();
@@ -146,32 +122,20 @@ function AdminSuppliersPage() {
     setSuccess("");
 
     try {
-      const response = await fetch(`${API_URL}/admin/suppliers`, {
-        method: "POST",
-        headers: {
-          ...authHeaders,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: form.name.trim(),
-          identification: form.identification.trim() || null,
-          phone: form.phone.trim() || null,
-          email: form.email.trim() || null,
-          address: form.address.trim() || null,
-          notes: form.notes.trim() || null,
-        }),
-      });
-
-      if (response.status === 401 || response.status === 403) {
-        logout();
-        throw new Error("Tu sesión no está autorizada. Ingresa nuevamente.");
-      }
-
-      if (!response.ok) {
-        throw new Error("No fue posible registrar el proveedor.");
-      }
-
-      const createdSupplier = await response.json();
+      const createdSupplier = await apiRequest(
+  "/admin/suppliers",
+  {
+    method: "POST",
+    body: JSON.stringify({
+      name: form.name.trim(),
+      identification: form.identification.trim() || null,
+      phone: form.phone.trim() || null,
+      email: form.email.trim() || null,
+      address: form.address.trim() || null,
+      notes: form.notes.trim() || null,
+    }),
+  }
+);
 
       setSuppliers((previous) => [...previous, createdSupplier]);
       setSuccess("Proveedor registrado correctamente.");
@@ -194,30 +158,20 @@ function AdminSuppliersPage() {
     setSuccess("");
 
     try {
-        const response = await fetch(
-        `${API_URL}/admin/suppliers/${editingSupplier.id}`,
-        {
-            method: "PUT",
-            headers: {
-            ...authHeaders,
-            "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-            name: form.name,
-            identification: form.identification || null,
-            phone: form.phone || null,
-            email: form.email || null,
-            address: form.address || null,
-            notes: form.notes || null,
-            }),
-        }
-        );
-
-        if (!response.ok) {
-        throw new Error("No fue posible actualizar el proveedor.");
-        }
-
-        const updatedSupplier = await response.json();
+        const updatedSupplier = await apiRequest(
+  `/admin/suppliers/${editingSupplier.id}`,
+  {
+    method: "PUT",
+    body: JSON.stringify({
+      name: form.name,
+      identification: form.identification || null,
+      phone: form.phone || null,
+      email: form.email || null,
+      address: form.address || null,
+      notes: form.notes || null,
+    }),
+  }
+);
 
         setSuppliers((previous) =>
         previous.map((supplier) =>
@@ -247,17 +201,12 @@ function AdminSuppliersPage() {
         setSuccess("");
 
         try {
-            const response = await fetch(
-            `${API_URL}/admin/suppliers/${supplier.id}/status?status=${newStatus}`,
-            {
+            await apiRequest(
+              `/admin/suppliers/${supplier.id}/status?status=${newStatus}`,
+              {
                 method: "PATCH",
-                headers: authHeaders,
-            }
+              }
             );
-
-            if (!response.ok) {
-            throw new Error("No fue posible cambiar el estado del proveedor.");
-            }
 
             setSuppliers((previous) =>
             previous.map((item) =>
@@ -277,10 +226,6 @@ function AdminSuppliersPage() {
             setError(error.message);
         }
         };
-
-  if (!credentials) {
-    return <AdminAccessDenied />;
-  }
 
   return (
     <main className="bn-orders-layout">

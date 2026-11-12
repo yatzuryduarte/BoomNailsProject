@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useAdminAuth } from "../../context/AdminAuthContext";
 import "./AdminDashboardPage.css";
 import AdminSidebar from "./AdminSidebar";
+import { useAdminStats } from "../../context/AdminStatsContext";
 
 import {
   BarChart,
@@ -21,7 +22,6 @@ import {
   Package,
 } from "lucide-react";
 
-const API_URL = "http://localhost:8080/api/admin/orders";
 
 const formatCurrency = (value) =>
   new Intl.NumberFormat("es-CO", {
@@ -38,56 +38,33 @@ const statusLabels = {
   DESPACHADO: "Despachado",
   ENTREGADO: "Entregado",
   CANCELADO: "Cancelado",
+  RECHAZADO: "Rechazado",
 };
 
 function AdminDashboardPage() {
-  const { credentials } = useAdminAuth();
+  const { token, isAuthenticated } = useAdminAuth();
 
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+    const {
+    orders,
+    totalSales,
+    totalOrders,
+    totalCustomers,
+    pendingOrders,
+    processingOrders,
+    deliveredOrders,
+    loading,
+    error,
+  } = useAdminStats();
+
+  
   const [productsCount, setProductsCount] = useState(0);
   const [topProducts, setTopProducts] = useState([]);
   const [weeklySales, setWeeklySales] = useState([]);
 
-  useEffect(() => {
-    if (!credentials) {
-      setOrders([]);
-      setLoading(false);
-      return;
-    }
-
-    const fetchOrders = async () => {
-      try {
-        setLoading(true);
-        setError("");
-
-        const response = await fetch(API_URL, {
-          headers: {
-            Authorization: `Basic ${btoa(
-              `${credentials.email}:${credentials.password}`
-            )}`,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error("No fue posible cargar los datos del Dashboard.");
-        }
-
-        const data = await response.json();
-        setOrders(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchOrders();
-  }, [credentials]);
+  
 
   useEffect(() => {
-  if (!credentials) {
+  if (!isAuthenticated || !token) {
     setTopProducts([]);
     return;
   }
@@ -98,9 +75,7 @@ function AdminDashboardPage() {
         "http://localhost:8080/api/admin/dashboard/top-selling-products",
         {
           headers: {
-            Authorization: `Basic ${btoa(
-              `${credentials.email}:${credentials.password}`
-            )}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -117,11 +92,11 @@ function AdminDashboardPage() {
   };
 
   fetchTopProducts();
-}, [credentials]);
-
+}, [token, isAuthenticated]);
+  
 
 useEffect(() => {
-  if (!credentials) {
+  if (!isAuthenticated || !token) {
     setWeeklySales([]);
     return;
   }
@@ -132,9 +107,7 @@ useEffect(() => {
         "http://localhost:8080/api/admin/dashboard/weekly-sales",
         {
           headers: {
-            Authorization: `Basic ${btoa(
-              `${credentials.email}:${credentials.password}`
-            )}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -151,7 +124,7 @@ useEffect(() => {
   };
 
   fetchWeeklySales();
-}, [credentials]);
+}, [token, isAuthenticated]);
 
 
   useEffect(() => {
@@ -173,80 +146,7 @@ useEffect(() => {
   fetchProducts();
 }, []);
 
-const statistics = useMemo(() => {
-  // Estados que SÍ representan una venta válida
-  const validSaleStatuses = [
-    "PEDIDO_CONFIRMADO",
-    "EN_BODEGA",
-    "EMPACADO",
-    "DESPACHADO",
-    "ENTREGADO",
-  ];
 
-  // Filtrar únicamente pedidos que cuentan como ventas
-  const validSales = orders.filter((order) =>
-    validSaleStatuses.includes(order.status)
-  );
-
-  // =========================
-  // VENTAS TOTALES
-  // =========================
-  const totalSales = validSales.reduce(
-    (sum, order) => sum + Number(order.total || 0),
-    0
-  );
-
-  // =========================
-  // PEDIDOS VÁLIDOS
-  // =========================
-  const totalOrders = validSales.length;
-
-  // =========================
-  // PEDIDOS PENDIENTES
-  // =========================
-  const pendingOrders = orders.filter(
-    (order) => order.status === "PAGO_EN_REVISION"
-  ).length;
-
-  // =========================
-  // PEDIDOS EN PROCESO
-  // =========================
-  const processingOrders = orders.filter((order) =>
-    [
-      "PEDIDO_CONFIRMADO",
-      "EN_BODEGA",
-      "EMPACADO",
-      "DESPACHADO",
-    ].includes(order.status)
-  ).length;
-
-  // =========================
-  // PEDIDOS ENTREGADOS
-  // =========================
-  const deliveredOrders = orders.filter(
-    (order) => order.status === "ENTREGADO"
-  ).length;
-
-  // =========================
-  // CLIENTES
-  // =========================
-  const totalCustomers = new Set(
-    validSales
-      .map((order) =>
-        order.customerEmail?.trim().toLowerCase()
-      )
-      .filter(Boolean)
-  ).size;
-
-  return {
-    totalSales,
-    totalOrders,
-    pendingOrders,
-    processingOrders,
-    deliveredOrders,
-    totalCustomers,
-  };
-}, [orders]);
 
 
 const chartData = useMemo(() => {
@@ -286,7 +186,7 @@ const chartData = useMemo(() => {
     return <main className="bn-dashboard-page">{error}</main>;
   }
 
-  if (!credentials) {
+  if (!isAuthenticated) {
     return (
       <main className="bn-dashboard-page">
         Debes iniciar sesión para consultar el Dashboard.
@@ -314,7 +214,7 @@ const chartData = useMemo(() => {
     </div>
     <div className="bn-stat-info">
       <span>Ventas totales</span>
-      <strong>{formatCurrency(statistics.totalSales)}</strong>
+      <strong>{formatCurrency(totalSales)}</strong>
     </div>
   </article>
 
@@ -324,7 +224,7 @@ const chartData = useMemo(() => {
     </div>
     <div className="bn-stat-info">
       <span>Pedidos</span>
-      <strong>{statistics.totalOrders}</strong>
+      <strong>{totalOrders}</strong>
     </div>
   </article>
 
@@ -334,7 +234,7 @@ const chartData = useMemo(() => {
     </div>
     <div className="bn-stat-info">
       <span>Clientes</span>
-      <strong>{statistics.totalCustomers}</strong>
+      <strong>{totalCustomers}</strong>
     </div>
   </article>
 
