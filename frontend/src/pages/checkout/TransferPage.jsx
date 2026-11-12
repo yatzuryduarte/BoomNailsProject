@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
+import { apiRequest } from '../../services/api';
 import './TransferPage.css';
 
 function formatPrice(price) {
@@ -83,24 +84,10 @@ function TransferPage() {
       data.append('order', JSON.stringify(order));
       data.append('receipt', comprobante);
 
-      const apiUrl =
-        import.meta.env.VITE_API_URL ||
-        'http://localhost:8080/api';
-
-      const response = await fetch(`${apiUrl}/checkout`, {
+      const result = await apiRequest('/checkout', {
         method: 'POST',
         body: data,
       });
-
-      const result = await response.json().catch(() => ({}));
-
-      if (!response.ok) {
-        throw new Error(
-          result.message ||
-          result.error ||
-          'No fue posible registrar el pedido.'
-        );
-      }
 
       navigate(`/order-confirmation/${result.orderId}`, {
         state: {
