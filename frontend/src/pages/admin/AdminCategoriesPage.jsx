@@ -1,14 +1,14 @@
-
 import { useEffect, useState } from "react";
 import { useAdminAuth } from "../../context/AdminAuthContext";
 import AdminSidebar from "./AdminSidebar";
-import AdminAccessDenied from "./AdminAccessDenied";
+import { apiRequest } from "../../services/api";
 
-const API_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:8080/api";
+const API_URL = import.meta.env.VITE_API_URL || "";
+const imageBaseUrl =
+  (import.meta.env.VITE_API_URL || "").replace(/\/api\/?$/, "");
 
 function AdminCategoriesPage() {
-  const { credentials, logout } = useAdminAuth();
+  const { logout } = useAdminAuth();
 
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -54,10 +54,10 @@ const openEditForm = (category) => {
   });
 
   setImagePreview(
-    category.imageUrl
-      ? `http://localhost:8080${category.imageUrl}`
-      : ""
-  );
+  category.imageUrl
+    ? `${imageBaseUrl}${category.imageUrl}`
+    : ""
+);
 
   setError("");
   setShowForm(true);
@@ -129,28 +129,14 @@ const handleSaveCategory = async (event) => {
       data.append("image", formData.image);
     }
 
-    const url = editingCategory
-      ? `${API_URL}/admin/categories/${editingCategory.id}`
-      : `${API_URL}/admin/categories`;
+    const path = editingCategory
+      ? `/admin/categories/${editingCategory.id}`
+      : "/admin/categories";
 
-    const response = await fetch(url, {
+    await apiRequest(path, {
       method: editingCategory ? "PUT" : "POST",
-      headers: {
-        Authorization: `Basic ${btoa(
-          `${credentials.email}:${credentials.password}`
-        )}`,
-      },
       body: data,
     });
-
-    if (!response.ok) {
-      const details = await response.text();
-      throw new Error(
-        `Error ${response.status}: ${
-          details || "No fue posible guardar la categoría."
-        }`
-      );
-    }
 
     setShowForm(false);
     setEditingCategory(null);
@@ -158,40 +144,30 @@ const handleSaveCategory = async (event) => {
 
     await loadCategories();
   } catch (err) {
-    setError(err.message);
+    setError(
+      err.message || "No fue posible guardar la categoría."
+    );
   } finally {
     setSaving(false);
   }
 };
 
   const loadCategories = async () => {
-    try {
-      setLoading(true);
-      setError("");
+  try {
+    setLoading(true);
+    setError("");
 
-      const response = await fetch(
-        `${API_URL}/admin/categories`,
-        {
-          headers: {
-            Authorization: `Basic ${btoa(
-              `${credentials.email}:${credentials.password}`
-            )}`,
-          },
-        }
-      );
+    const data = await apiRequest("/admin/categories");
 
-      if (!response.ok) {
-        throw new Error("No fue posible cargar las categorías.");
-      }
-
-      const data = await response.json();
-      setCategories(data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+    setCategories(data);
+  } catch (err) {
+    setError(
+      err.message || "No fue posible cargar las categorías."
+    );
+  } finally {
+    setLoading(false);
+  }
+};
 
   const updateCategoryStatus = async (category) => {
   const nextStatus = !category.active;
@@ -208,82 +184,54 @@ const handleSaveCategory = async (event) => {
   try {
     setError("");
 
-    const response = await fetch(
-      `${API_URL}/admin/categories/${category.id}/status?active=${nextStatus}`,
+    await apiRequest(
+      `/admin/categories/${category.id}/status?active=${nextStatus}`,
       {
         method: "PATCH",
-        headers: {
-          Authorization: `Basic ${btoa(
-            `${credentials.email}:${credentials.password}`
-          )}`,
-        },
       }
     );
 
-    if (!response.ok) {
-  const errorDetails = await response.text();
-
-  throw new Error(
-    `Error ${response.status}: ${errorDetails || "No fue posible actualizar el estado."}`
-  );
-}
-
     await loadCategories();
   } catch (err) {
-    setError(err.message);
+    setError(
+      err.message ||
+        "No fue posible actualizar el estado de la categoría."
+    );
   }
 };
 
     const handleDeleteCategory = async (category) => {
-    const confirmed = window.confirm(
-        `¿Estás segura de eliminar la categoría "${category.name}"?\n\nEsta acción no se puede deshacer.`
+  const confirmed = window.confirm(
+    `¿Estás segura de eliminar la categoría "${category.name}"?\n\nEsta acción no se puede deshacer.`
+  );
+
+  if (!confirmed) return;
+
+  try {
+    setDeletingId(category.id);
+    setError("");
+
+    await apiRequest(
+      `/admin/categories/${category.id}`,
+      {
+        method: "DELETE",
+      }
     );
 
-    if (!confirmed) return;
-
-    try {
-        setDeletingId(category.id);
-        setError("");
-
-        const response = await fetch(
-        `${API_URL}/admin/categories/${category.id}`,
-        {
-            method: "DELETE",
-            headers: {
-            Authorization: `Basic ${btoa(
-                `${credentials.email}:${credentials.password}`
-            )}`,
-            },
-        }
-        );
-
-        if (!response.ok) {
-        const details = await response.text();
-
-        throw new Error(
-            details ||
-            "No fue posible eliminar la categoría. Verifica si tiene productos o subcategorías."
-        );
-        }
-
-        await loadCategories();
-
-    } catch (err) {
-        setError(err.message);
-    } finally {
-        setDeletingId(null);
-    }
-    };
+    await loadCategories();
+  } catch (err) {
+    setError(
+      err.message ||
+        "No fue posible eliminar la categoría. Verifica si tiene productos o subcategorías."
+    );
+  } finally {
+    setDeletingId(null);
+  }
+};
 
   useEffect(() => {
-    if (credentials) {
       loadCategories();
-    }
-  }, []);
-
-  if (!credentials) {
-  return <AdminAccessDenied />;
-}
+    }, []);
 
   return (
     <main className="bn-orders-layout">
@@ -482,8 +430,8 @@ const handleSaveCategory = async (event) => {
                             <div className="bn-category-table-image">
                             {category.imageUrl ? (
                                 <img
-                                src={`http://localhost:8080${category.imageUrl}`}
-                                alt={category.name}
+                                  src={`${imageBaseUrl}${category.imageUrl}`}
+                                  alt={category.name}
                                 />
                             ) : (
                                 <span>Sin imagen</span>

@@ -8,6 +8,8 @@ import CheckoutPage from "../pages/checkout/CheckoutPage";
 import TransferPage from "../pages/checkout/TransferPage";
 import OrderConfirmationPage from "../pages/checkout/OrderConfirmationPage";
 
+import AdminLoginPage from "../pages/admin/AdminLoginPage";
+
 import AdminDashboardPage from "../pages/admin/AdminDashboardPage";
 import AdminProductsPage from "../pages/admin/AdminProductsPage";
 import AdminPaymentsPage from "../pages/admin/AdminPaymentsPage";
@@ -16,6 +18,8 @@ import AdminOrderDetailPage from "../pages/admin/AdminOrderDetailPage";
 import AdminCategoriesPage from "../pages/admin/AdminCategoriesPage";
 import AdminInventoryPage from "../pages/admin/AdminInventoryPage";
 import AdminSuppliersPage from "../pages/admin/AdminSuppliersPage";
+
+import ProtectedRoute from "./ProtectedRoute";
 
 import { AdminAuthProvider } from "../context/AdminAuthContext";
 import { AdminStatsProvider } from "../context/AdminStatsContext";
@@ -61,47 +65,59 @@ function AppRoutes() {
           />
 
 
-          {/* Admin panel */}
+          {/* Admin login */}
 
           <Route
-            path="/admin"
-            element={<AdminDashboardPage />}
+            path="/admin/login"
+            element={<AdminLoginPage />}
           />
 
-          <Route
-            path="/admin/products"
-            element={<AdminProductsPage />}
-          />
 
-          <Route
-            path="/admin/categories"
-            element={<AdminCategoriesPage />}
-          />
+          {/* Protected admin panel */}
 
-          <Route
-            path="/admin/payments"
-            element={<AdminPaymentsPage />}
-          />
+          <Route element={<ProtectedRoute />}>
 
-          <Route
-            path="/admin/orders"
-            element={<AdminOrdersPage />}
-          />
+            <Route
+              path="/admin"
+              element={<AdminDashboardPage />}
+            />
 
-          <Route
-            path="/admin/orders/:orderId"
-            element={<AdminOrderDetailPage />}
-          />
+            <Route
+              path="/admin/products"
+              element={<AdminProductsPage />}
+            />
 
-          <Route
-            path="/admin/inventory"
-            element={<AdminInventoryPage />}
-          />
+            <Route
+              path="/admin/categories"
+              element={<AdminCategoriesPage />}
+            />
 
-          <Route
-            path="/admin/suppliers"
-            element={<AdminSuppliersPage />}
-          />
+            <Route
+              path="/admin/payments"
+              element={<AdminPaymentsPage />}
+            />
+
+            <Route
+              path="/admin/orders"
+              element={<AdminOrdersPage />}
+            />
+
+            <Route
+              path="/admin/orders/:orderId"
+              element={<AdminOrderDetailPage />}
+            />
+
+            <Route
+              path="/admin/inventory"
+              element={<AdminInventoryPage />}
+            />
+
+            <Route
+              path="/admin/suppliers"
+              element={<AdminSuppliersPage />}
+            />
+
+          </Route>
 
 
           {/* Unknown routes */}

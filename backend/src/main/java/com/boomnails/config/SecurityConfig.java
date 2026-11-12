@@ -89,6 +89,12 @@ public class SecurityConfig {
                     "/api/productos/**"
                 ).permitAll()
 
+                // Cualquiera puede consultar categorías
+                .requestMatchers(
+                    HttpMethod.GET,
+                    "/api/categories/**"
+                ).permitAll()
+
                 // Solo ADMIN puede crear
                 .requestMatchers(
                     HttpMethod.POST,
@@ -162,6 +168,24 @@ public class SecurityConfig {
                     HttpMethod.DELETE,
                     "/api/product-images/**"
                 ).hasRole("ADMIN")
+
+                // =========================
+                // IMÁGENES DE CATEGORÍAS
+                // =========================
+
+                .requestMatchers(
+                    HttpMethod.GET,
+                    "/uploads/categorias/**"
+                ).permitAll()
+
+                // =========================
+                // IMÁGENES DE PRODUCTOS
+                // =========================
+
+                .requestMatchers(
+                    HttpMethod.GET,
+                    "/uploads/productos/**"
+                ).permitAll()
 
 
                 // =========================

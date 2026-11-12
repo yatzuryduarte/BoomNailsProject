@@ -7,10 +7,9 @@ import {
 } from "react";
 
 import { useAdminAuth } from "./AdminAuthContext";
+import { apiRequest } from "../services/api";
 
 const AdminStatsContext = createContext(null);
-
-const API_URL = "http://localhost:8080/api/admin/orders";
 
 // ======================================================
 // ESTADOS QUE REPRESENTAN UNA VENTA REAL
@@ -24,8 +23,12 @@ export const VALID_SALE_STATUSES = [
   "ENTREGADO",
 ];
 
+// ======================================================
+// PROVIDER
+// ======================================================
+
 export function AdminStatsProvider({ children }) {
-  const { credentials } = useAdminAuth();
+  const { token, isAuthenticated } = useAdminAuth();
 
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -36,7 +39,7 @@ export function AdminStatsProvider({ children }) {
   // ======================================================
 
   useEffect(() => {
-    if (!credentials) {
+    if (!isAuthenticated || !token) {
       setOrders([]);
       setLoading(false);
       return;
@@ -47,25 +50,7 @@ export function AdminStatsProvider({ children }) {
         setLoading(true);
         setError("");
 
-        const response = await fetch(API_URL, {
-          headers: {
-            Authorization: `Basic ${btoa(
-              `${credentials.email}:${credentials.password}`
-            )}`,
-          },
-        });
-
-        if (response.status === 401 || response.status === 403) {
-          throw new Error(
-            "Credenciales incorrectas o acceso no autorizado."
-          );
-        }
-
-        if (!response.ok) {
-          throw new Error("No fue posible cargar los pedidos.");
-        }
-
-        const data = await response.json();
+        const data = await apiRequest("/admin/orders");
 
         setOrders(Array.isArray(data) ? data : []);
       } catch (err) {
@@ -83,7 +68,7 @@ export function AdminStatsProvider({ children }) {
     };
 
     fetchOrders();
-  }, [credentials]);
+  }, [isAuthenticated, token]);
 
   // ======================================================
   // PEDIDOS QUE CUENTAN COMO VENTAS
@@ -175,10 +160,6 @@ export function AdminStatsProvider({ children }) {
   // ======================================================
   // VALOR TOTAL DE PEDIDOS REGISTRADOS
   // ======================================================
-  // Este valor es opcional.
-  // Incluye también rechazados/cancelados.
-  // Útil si algún día quieres mostrar "valor histórico
-  // de todos los pedidos".
 
   const totalRegisteredOrderValue = useMemo(() => {
     return orders.reduce(

@@ -1,9 +1,10 @@
 
 import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAdminAuth } from "../../context/AdminAuthContext";
 import "./AdminOrdersPage.css";
 import AdminSidebar from "./AdminSidebar";
+import { useAdminStats } from "../../context/AdminStatsContext";
 
 const API_URL = "http://localhost:8080/api/admin/orders";
 
@@ -38,66 +39,25 @@ export default function AdminOrdersPage() {
   const { credentials } = useAdminAuth();
   const navigate = useNavigate();
 
-  const [orders, setOrders] = useState([]);
+  const {
+  orders,
+  totalSales,
+  totalOrders,
+  pendingOrders,
+  processingOrders,
+  loading,
+  error,
+} = useAdminStats();
+
+  
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("TODOS");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
   const [orderItems, setOrderItems] = useState([]);
   const [itemsLoading, setItemsLoading] = useState(false);
   const [itemsError, setItemsError] = useState("");
 
-  useEffect(() => {
-    if (!credentials) {
-      setOrders([]);
-      setSelectedOrderId(null);
-      setLoading(false);
-      return;
-    }
-
-    const fetchOrders = async () => {
-      try {
-        setLoading(true);
-        setError("");
-
-        const response = await fetch(API_URL, {
-          headers: {
-            Authorization: `Basic ${btoa(
-              `${credentials.email}:${credentials.password}`
-            )}`,
-          },
-        });
-
-        if (response.status === 401 || response.status === 403) {
-          throw new Error(
-            "Credenciales incorrectas o acceso no autorizado."
-          );
-        }
-
-        if (!response.ok) {
-          throw new Error("No fue posible cargar los pedidos.");
-        }
-
-        const data = await response.json();
-
-        setOrders(data);
-        setSelectedOrderId((currentId) => {
-          if (data.some((order) => order.orderId === currentId)) {
-            return currentId;
-          }
-
-          return data.length > 0 ? data[0].orderId : null;
-        });
-      } catch (err) {
-        setError(err.message || "Ocurrió un error al cargar los pedidos.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchOrders();
-  }, [credentials]);
+  
 
   const filteredOrders = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
@@ -160,64 +120,7 @@ export default function AdminOrdersPage() {
   fetchOrderItems();
 }, [selectedOrderId, credentials]);
 
-// ========================================
-// ESTADOS QUE CUENTAN COMO VENTA VÁLIDA
-// ========================================
 
-const validSaleStatuses = [
-  "PEDIDO_CONFIRMADO",
-  "EN_BODEGA",
-  "EMPACADO",
-  "DESPACHADO",
-  "ENTREGADO",
-];
-
-// ========================================
-// PEDIDOS QUE CUENTAN COMO VENTAS
-// ========================================
-
-const validOrders = orders.filter((order) =>
-  validSaleStatuses.includes(order.status)
-);
-
-// ========================================
-// VENTAS TOTALES
-// ========================================
-
-const totalSales = validOrders.reduce(
-  (sum, order) => sum + Number(order.total || 0),
-  0
-);
-
-// ========================================
-// TOTAL DE PEDIDOS VÁLIDOS
-// ========================================
-
-const totalOrders = validOrders.length;
-
-// ========================================
-// PAGOS PENDIENTES
-// ========================================
-
-const pendingOrders = orders.filter(
-  (order) => order.status === "PAGO_EN_REVISION"
-).length;
-
-// ========================================
-// PEDIDOS CONFIRMADOS
-// ========================================
-
-const confirmedOrders = orders.filter(
-  (order) => order.status === "PEDIDO_CONFIRMADO"
-).length;
-
-// ========================================
-// PEDIDOS EN PROCESO
-// ========================================
-
-const processingOrders = orders.filter((order) =>
-  ["EN_BODEGA", "EMPACADO", "DESPACHADO"].includes(order.status)
-).length;
 
   return (
     <main className="bn-orders-layout">

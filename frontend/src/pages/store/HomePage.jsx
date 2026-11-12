@@ -81,14 +81,42 @@ function HomePage() {
     }, []);
 
   function getImageUrl(imageUrl) {
-    if (!imageUrl) return null;
-
-    if (/^https?:\/\//i.test(imageUrl)) {
-      return imageUrl;
-    }
-
-    return `${API_BASE_URL}${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
+  if (!imageUrl) {
+    return null;
   }
+
+  // Si ya viene como URL completa
+  if (/^https?:\/\//i.test(imageUrl)) {
+    return imageUrl;
+  }
+
+  // Si viene como /api/...
+  if (imageUrl.startsWith('/api/')) {
+    return `${API_BASE_URL}${imageUrl}`;
+  }
+
+  // Si viene como /uploads/...
+  if (imageUrl.startsWith('/uploads/')) {
+    return `${API_BASE_URL}${imageUrl}`;
+  }
+
+  // Si viene como uploads/...
+  if (imageUrl.startsWith('uploads/')) {
+    return `${API_BASE_URL}/${imageUrl}`;
+  }
+
+  // Si viene como /product-images/...
+  if (imageUrl.startsWith('/product-images/')) {
+    return `${API_BASE_URL}/api${imageUrl}`;
+  }
+
+  // Si viene como product-images/...
+  if (imageUrl.startsWith('product-images/')) {
+    return `${API_BASE_URL}/api/${imageUrl}`;
+  }
+
+  return `${API_BASE_URL}/${imageUrl}`;
+}
 
   function getSelectedPresentation(product, availablePresentations) {
     const selectedId = selectedPresentations[product.id];
