@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import "./components/ui/AdminCommon.css";
 import "./AdminPaymentsPage.css";
+import AdminTopBar from "./components/ui/AdminTopBar";
 import { useAdminAuth } from "../../context/AdminAuthContext";
 import { Link } from "react-router-dom";
 import AdminSidebar from "./AdminSidebar";
@@ -194,22 +196,10 @@ return (
     <AdminSidebar />
 
     <div className="bn-payments-content">
-      <div className="bn-payments-topbar">
-        <div>
-          <strong>BOOM NAILS</strong>
-          <small>Administración · Gestión de pagos</small>
-        </div>
-
-        <button
-          className="bn-logout"
-          onClick={() => {
-            logout();
-            setPayments([]);
-          }}
-        >
-          Salir
-        </button>
-      </div>
+      <AdminTopBar
+        section="Gestión de pagos"
+        onLogout={logout}
+      />
 
       <section className="bn-dashboard">
         <div className="bn-page-heading">

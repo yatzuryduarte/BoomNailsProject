@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useAdminAuth } from "../../context/AdminAuthContext";
+import { apiRequest } from "../../services/api";
 import "./AdminOrderDetailPage.css";
 
 const API_URL = "http://localhost:8080/api/admin/orders";
@@ -41,7 +42,7 @@ const nextStatus = {
 
 export default function AdminOrderDetailPage() {
   const { orderId } = useParams();
-  const { credentials } = useAdminAuth();
+  const { isAuthenticated } = useAdminAuth();
 
   const [order, setOrder] = useState(null);
   const [items, setItems] = useState([]);
@@ -55,56 +56,43 @@ export default function AdminOrderDetailPage() {
     const [trackingNumber, setTrackingNumber] = useState("");
 
   useEffect(() => {
-    if (!credentials || !orderId) {
-      setLoading(false);
-      setError("Debes iniciar sesión para consultar este pedido.");
-      
-      return;
-    }
+  if (!isAuthenticated || !orderId) {
+    setLoading(false);
+    setError("Debes iniciar sesión para consultar este pedido.");
+    return;
+  }
 
-    const fetchOrderDetails = async () => {
-      try {
-        setLoading(true);
-        setError("");
+  const fetchOrderDetails = async () => {
+    try {
+      setLoading(true);
+      setError("");
 
-        const headers = {
-          Authorization: `Basic ${btoa(
-            `${credentials.email}:${credentials.password}`
-          )}`,
-        };
+      const [orders, products] = await Promise.all([
+        apiRequest("/admin/orders"),
+        apiRequest(`/admin/orders/${orderId}/items`),
+      ]);
 
-        const [ordersResponse, itemsResponse] = await Promise.all([
-          fetch(API_URL, { headers }),
-          fetch(`${API_URL}/${orderId}/items`, { headers }),
-        ]);
+      const selected = orders.find(
+        (item) => String(item.orderId) === String(orderId)
+      );
 
-        if (!ordersResponse.ok || !itemsResponse.ok) {
-          throw new Error("No fue posible consultar el pedido.");
-        }
-
-        const orders = await ordersResponse.json();
-        const products = await itemsResponse.json();
-
-        const selected = orders.find(
-          (item) => String(item.orderId) === String(orderId)
-        );
-
-        if (!selected) {
-          throw new Error("No encontramos el pedido solicitado.");
-        }
-
-        setOrder(selected);
-        setItems(products);
-
-      } catch (err) {
-        setError(err.message || "Ocurrió un error al consultar el pedido.");
-      } finally {
-        setLoading(false);
+      if (!selected) {
+        throw new Error("No encontramos el pedido solicitado.");
       }
-    };
 
-    fetchOrderDetails();
-  }, [credentials, orderId]);
+      setOrder(selected);
+      setItems(products);
+    } catch (err) {
+      setError(
+        err.message || "Ocurrió un error al consultar el pedido."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchOrderDetails();
+}, [isAuthenticated, orderId]);
 
   const handleStatusUpdate = async () => {
   const newStatus = nextStatus[order.status];
@@ -124,14 +112,8 @@ export default function AdminOrderDetailPage() {
   setUpdateSuccess("");
 
   try {
-    const response = await fetch(`${API_URL}/${orderId}/status`, {
+    await apiRequest(`/admin/orders/${orderId}/status`, {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Basic ${btoa(
-          `${credentials.email}:${credentials.password}`
-        )}`,
-      },
       body: JSON.stringify({
         status: newStatus,
         carrier: carrier.trim(),
@@ -139,22 +121,17 @@ export default function AdminOrderDetailPage() {
       }),
     });
 
-    if (!response.ok) {
-      const data = await response.json();
-      throw new Error(data.message || "No fue posible actualizar el pedido.");
-    }
-
     setOrder((previousOrder) => ({
-        ...previousOrder,
-        status: newStatus,
-        carrier: carrier.trim() || previousOrder.carrier,
-        trackingNumber:
-            trackingNumber.trim() || previousOrder.trackingNumber,
-        dispatchedAt:
-            newStatus === "DESPACHADO"
-            ? new Date().toISOString()
-            : previousOrder.dispatchedAt,
-        }));
+      ...previousOrder,
+      status: newStatus,
+      carrier: carrier.trim() || previousOrder.carrier,
+      trackingNumber:
+        trackingNumber.trim() || previousOrder.trackingNumber,
+      dispatchedAt:
+        newStatus === "DESPACHADO"
+          ? new Date().toISOString()
+          : previousOrder.dispatchedAt,
+    }));
 
     setUpdateSuccess("El estado del pedido se actualizó correctamente.");
   } catch (error) {

@@ -3,7 +3,7 @@
 .bn-dashboard-page {
   flex: 1;
   min-width: 0;
-  width: calc(100% - 220px);
+  width: 100%;
   min-height: 100vh;
   padding: 32px;
   background: #f8fbff;
@@ -50,16 +50,20 @@
 
 .bn-dashboard-stats--main article {
   min-width: 0;
-  min-height: 105px;
-  padding: 20px;
+  min-height: 104px;
+  padding: 18px;
   border-radius: 16px;
-  border: 1px solid #f1e5f1;
+  border: 1px solid #e5edfa;
+
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 12px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 14px;
+
+  box-sizing: border-box;
+
   box-shadow: 0 4px 14px rgba(24, 54, 100, 0.06);
-  background: linear-gradient(135deg, #ffe6f2, #fff8fc);
 }
 
 .bn-dashboard-stats--main article:nth-child(2) {
@@ -321,14 +325,6 @@
 
 
 /* TARJETAS PRINCIPALES CON ICONOS */
-.bn-dashboard-stats--main article {
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 14px;
-  min-height: 104px;
-  padding: 18px;
-}
 
 .bn-stat-icon {
   width: 48px;

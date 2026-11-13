@@ -57,9 +57,19 @@ export async function apiRequest(path, options = {}) {
     );
   }
 
-  if (response.status === 204) {
-    return null;
-  }
+  if (response.status === 204) return null;
 
-  return response.json();
+const contentType = response.headers.get("content-type") || "";
+
+if (!contentType.includes("application/json")) {
+  return null;
+}
+
+const text = await response.text();
+
+if (!text.trim()) {
+  return null;
+}
+
+return JSON.parse(text);
 }

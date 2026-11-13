@@ -3,8 +3,10 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdminAuth } from "../../context/AdminAuthContext";
 import "./AdminOrdersPage.css";
+import AdminTopBar from "./components/ui/AdminTopBar";
 import AdminSidebar from "./AdminSidebar";
 import { useAdminStats } from "../../context/AdminStatsContext";
+import { apiRequest } from "../../services/api";
 
 const API_URL = "http://localhost:8080/api/admin/orders";
 
@@ -36,7 +38,7 @@ const statusLabels = {
 };
 
 export default function AdminOrdersPage() {
-  const { credentials } = useAdminAuth();
+  const { logout } = useAdminAuth();
   const navigate = useNavigate();
 
   const {
@@ -81,7 +83,7 @@ export default function AdminOrdersPage() {
   );
 
   useEffect(() => {
-  if (!credentials || !selectedOrderId) {
+  if (!selectedOrderId) {
     setOrderItems([]);
     return;
   }
@@ -91,24 +93,11 @@ export default function AdminOrdersPage() {
       setItemsLoading(true);
       setItemsError("");
 
-      const response = await fetch(
-        `${API_URL}/${selectedOrderId}/items`,
-        {
-          headers: {
-            Authorization: `Basic ${btoa(
-              `${credentials.email}:${credentials.password}`
-            )}`,
-          },
-        }
+      const data = await apiRequest(
+        `/admin/orders/${selectedOrderId}/items`
       );
 
-      if (!response.ok) {
-        throw new Error("No fue posible cargar los productos del pedido.");
-      }
-
-      const data = await response.json();
       setOrderItems(data);
-
     } catch (err) {
       setItemsError(err.message);
       setOrderItems([]);
@@ -118,17 +107,23 @@ export default function AdminOrdersPage() {
   };
 
   fetchOrderItems();
-}, [selectedOrderId, credentials]);
+}, [selectedOrderId]);
 
 
 
   return (
     <main className="bn-orders-layout">
-      {/* BARRA LATERAL */}
-        <AdminSidebar />
+    {/* BARRA LATERAL */}
+    <AdminSidebar />
 
-      {/* CONTENIDO PRINCIPAL */}
-      <section className="bn-orders-main">
+    {/* CONTENIDO PRINCIPAL */}
+    <div className="bn-orders-main">
+      <AdminTopBar
+        section="Pedidos"
+        onLogout={logout}
+      />
+
+    <section className="bn-orders-page">
         <header className="bn-orders-heading">
           <div>
             <p className="bn-orders-eyebrow">
@@ -320,6 +315,7 @@ export default function AdminOrdersPage() {
           
         </section>
       </section>
+    </div>
     </main>
   );
 }

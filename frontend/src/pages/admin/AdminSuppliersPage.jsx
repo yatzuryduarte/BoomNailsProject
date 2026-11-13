@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAdminAuth } from "../../context/AdminAuthContext";
 import AdminSidebar from "./AdminSidebar";
-import "./AdminPaymentsPage.css";
+import "./components/ui/AdminCommon.css";
+import "./AdminSuppliersPage.css";
+import AdminTopBar from "./components/ui/AdminTopBar";
 import { apiRequest } from "../../services/api";
 
 function AdminSuppliersPage() {
@@ -232,16 +234,10 @@ function AdminSuppliersPage() {
       <AdminSidebar />
 
       <div className="bn-payments-content">
-        <div className="bn-payments-topbar">
-          <div>
-            <strong>BOOM NAILS</strong>
-            <small>Administración · Proveedores</small>
-          </div>
-
-          <button className="bn-logout" onClick={logout}>
-            Salir
-          </button>
-        </div>
+        <AdminTopBar
+          section="Proveedores"
+          onLogout={logout}
+        />
 
         <section className="bn-dashboard">
           <div className="bn-page-heading">

@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useAdminAuth } from "../../context/AdminAuthContext";
 import AdminSidebar from "./AdminSidebar";
 import { apiRequest } from "../../services/api";
+import "./components/ui/AdminCommon.css";
+import "./AdminCategoriesPage.css";
 
 const API_URL = import.meta.env.VITE_API_URL || "";
 const imageBaseUrl =

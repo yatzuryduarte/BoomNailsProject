@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAdminAuth } from "../../context/AdminAuthContext";
 import "./AdminDashboardPage.css";
+import AdminTopBar from "./components/ui/AdminTopBar";
 import AdminSidebar from "./AdminSidebar";
 import { useAdminStats } from "../../context/AdminStatsContext";
 
@@ -42,7 +43,7 @@ const statusLabels = {
 };
 
 function AdminDashboardPage() {
-  const { token, isAuthenticated } = useAdminAuth();
+  const { token, isAuthenticated, logout } = useAdminAuth();
 
     const {
     orders,
@@ -197,8 +198,15 @@ const chartData = useMemo(() => {
 
     return (
         <main className="bn-orders-layout">
-            <AdminSidebar />
-    <section className="bn-dashboard-page">
+    <AdminSidebar />
+
+    <div className="bn-payments-content">
+        <AdminTopBar
+            section="Dashboard"
+            onLogout={logout}
+        />
+
+        <section className="bn-dashboard-page">
       <header className="bn-dashboard-header">
         <p>BOOM NAILS · ADMINISTRACIÓN</p>
         <h1>Dashboard ♥</h1>
@@ -359,6 +367,7 @@ const chartData = useMemo(() => {
         )}
             </section>
     </section>
+    </div>
   </main>
   );
 }

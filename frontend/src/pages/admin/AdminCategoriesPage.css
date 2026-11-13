@@ -1,0 +1,341 @@
+/* =========================================
+   BOOM NAILS - GESTIÓN DE CATEGORÍAS
+   Estilos exclusivos del módulo
+========================================= */
+
+/* Botón Nueva categoría */
+
+.bn-category-save-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 17px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(110deg, #F72F91, #D91478);
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 5px 14px rgba(242, 61, 145, 0.18);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.bn-category-save-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(242, 61, 145, 0.25);
+}
+
+
+/* Tarjeta del formulario */
+
+.bn-category-form-card {
+  margin-bottom: 28px;
+  padding: 28px;
+  border: 1px solid #E8EEF8;
+  border-radius: 17px;
+  background: #FFFFFF;
+  box-shadow: 0 4px 16px rgba(24, 54, 100, 0.08);
+}
+
+.bn-category-form-card .bn-page-heading {
+  margin-bottom: 25px;
+}
+
+.bn-category-form-card form {
+  width: 100%;
+}
+
+
+/* Formulario */
+
+.bn-category-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 25px;
+}
+
+.bn-category-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bn-category-fields label {
+  margin-top: 8px;
+  color: #09265E;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.bn-category-fields input,
+.bn-category-fields textarea,
+.bn-category-fields select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #E1E8F2;
+  border-radius: 10px;
+  outline: none;
+  background: #FBFCFF;
+  color: #09265E;
+  font-family: inherit;
+  font-size: 13px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.bn-category-fields input:focus,
+.bn-category-fields textarea:focus,
+.bn-category-fields select:focus {
+  border-color: #F72F91;
+  box-shadow: 0 0 0 3px rgba(247, 47, 145, 0.10);
+}
+
+.bn-category-fields textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+
+/* Fotografía de categoría */
+
+.bn-category-image-field {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bn-category-image-field > label {
+  color: #09265E;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.bn-category-image-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 190px;
+  padding: 15px;
+  border: 2px dashed #F4B8D5;
+  border-radius: 14px;
+  background: #FFF7FB;
+  text-align: center;
+  overflow: hidden;
+}
+
+.bn-category-image-preview > div {
+  color: #D91478;
+}
+
+.bn-category-image-preview span {
+  display: grid;
+  place-items: center;
+  width: 45px;
+  height: 45px;
+  margin: 0 auto 10px;
+  border-radius: 50%;
+  background: #FFE6F2;
+  font-size: 28px;
+}
+
+.bn-category-image-preview p {
+  margin: 0;
+  color: #71809B;
+  font-size: 12px;
+}
+
+.bn-category-image-preview img {
+  width: 100%;
+  max-height: 220px;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.bn-category-image-field input[type="file"] {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #E8EEF8;
+  border-radius: 10px;
+  background: #FFFFFF;
+  color: #09265E;
+  font-size: 12px;
+}
+
+.bn-category-image-field small {
+  color: #8791A2;
+  font-size: 11px;
+}
+
+
+/* Botones del formulario */
+
+.bn-category-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #EDF0F5;
+}
+
+
+/* Botones de gestión */
+
+.bn-category-status-button,
+.bn-category-edit-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-width: 105px;
+  padding: 9px 13px;
+  border-radius: 9px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+
+/* Desactivar */
+
+.bn-category-status-inactive {
+  border: 1px solid #F6C9DF;
+  background: #FFF0F7;
+  color: #D92779;
+}
+
+.bn-category-status-inactive:hover {
+  background: #FFE1EF;
+  border-color: #F23D91;
+  transform: translateY(-1px);
+}
+
+
+/* Activar */
+
+.bn-category-status-active {
+  border: 1px solid #BDE8CF;
+  background: #EAF8F0;
+  color: #176B42;
+}
+
+.bn-category-status-active:hover {
+  background: #D8F3E3;
+  border-color: #75C99A;
+  transform: translateY(-1px);
+}
+
+
+/* Editar */
+
+.bn-category-edit-button {
+  border: 1px solid #DCE8F5;
+  background: #FFFFFF;
+  color: #09265E;
+}
+
+.bn-category-edit-button:hover {
+  border-color: #F4B8D5;
+  background: #FFF7FB;
+  color: #D92779;
+  transform: translateY(-1px);
+}
+
+
+/* Deshabilitados */
+
+.bn-category-status-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+
+/* Miniaturas de categorías */
+
+.bn-category-table-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  overflow: hidden;
+  border: 1px solid #F8D8E8;
+  border-radius: 12px;
+  background: #FFF7FB;
+}
+
+.bn-category-table-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bn-category-table-image span {
+  color: #8791A2;
+  font-size: 9px;
+  text-align: center;
+}
+
+
+/* Acciones de categorías */
+
+.bn-category-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.bn-category-delete-button {
+  padding: 9px 14px;
+  border: 1px solid #ffd1df;
+  border-radius: 10px;
+  background: #fff0f4;
+  color: #d91455;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.bn-category-delete-button:hover {
+  background: #d91455;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(217, 20, 85, 0.18);
+}
+
+.bn-category-delete-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+
+/* Adaptación a móviles */
+
+@media (max-width: 760px) {
+  .bn-category-form-card {
+    padding: 20px;
+  }
+
+  .bn-category-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bn-category-save-button {
+    width: 100%;
+  }
+
+  .bn-category-form-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .bn-category-form-actions button {
+    width: 100%;
+  }
+}

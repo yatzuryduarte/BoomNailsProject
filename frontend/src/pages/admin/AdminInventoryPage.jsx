@@ -4,7 +4,9 @@ import { useAdminAuth } from "../../context/AdminAuthContext";
 
 import AdminSidebar from "./AdminSidebar";
 
-import "./AdminPaymentsPage.css";
+import "./components/ui/AdminCommon.css";
+import "./AdminInventoryPage.css";
+import AdminTopBar from "./components/ui/AdminTopBar";
 
 
 import { apiRequest } from "../../services/api";
@@ -419,16 +421,10 @@ function AdminInventoryPage() {
       <AdminSidebar />
 
       <div className="bn-payments-content">
-        <div className="bn-payments-topbar">
-          <div>
-            <strong>BOOM NAILS</strong>
-            <small>Administración · Inventario</small>
-          </div>
-
-          <button className="bn-logout" onClick={logout}>
-            Salir
-          </button>
-        </div>
+        <AdminTopBar
+        section="Inventario"
+        onLogout={logout}
+        />
 
         <section className="bn-dashboard">
           <div className="bn-page-heading">
@@ -558,7 +554,7 @@ function AdminInventoryPage() {
               </div>
             ) : (
               <div className="bn-table-wrap">
-                <table className="bn-payments-table bn-inventory-table">
+                <table className="bn-payments-table bn-inventory-table bn-movements-table">
                   <thead>
                     <tr>
                       <th>Producto</th>
@@ -774,8 +770,10 @@ function AdminInventoryPage() {
                         </td>
 
                         <td>
+                        <div className="bn-movement-product">
                             <strong>{movement.producto}</strong>
                             <small>ID: {movement.idPresentacion}</small>
+                        </div>
                         </td>
 
                         <td>{movement.presentacion}</td>

@@ -122,11 +122,19 @@ public class AdminOrderRepositoryMySqlAdapter implements AdminOrderRepositoryPor
 
         // Validar la secuencia permitida
         boolean validTransition = switch (currentStatus) {
-            case "PEDIDO_CONFIRMADO" -> status.equals("EN_BODEGA");
-            case "EN_BODEGA" -> status.equals("EMPACADO");
-            case "EMPACADO" -> status.equals("DESPACHADO");
-            case "DESPACHADO" -> status.equals("ENTREGADO");
-            default -> false;
+        case "PEDIDO_CONFIRMADO" ->
+            status.equals("EN_BODEGA") || status.equals("CANCELADO");
+
+        case "EN_BODEGA" ->
+            status.equals("EMPACADO") || status.equals("CANCELADO");
+
+        case "EMPACADO" ->
+            status.equals("DESPACHADO") || status.equals("CANCELADO");
+
+        case "DESPACHADO" ->
+            status.equals("ENTREGADO");
+
+        default -> false;
         };
 
         if (!validTransition) {
