@@ -2,18 +2,11 @@
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import './CartPage.css';
+import { formatCurrency } from "../../utils/formatters";
 
 const API_BASE_URL = (
   import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
 ).replace(/\/api\/?$/, '');
-
-function formatPrice(price) {
-  return Number(price).toLocaleString('es-CO', {
-    style: 'currency',
-    currency: 'COP',
-    maximumFractionDigits: 0,
-  });
-}
 
 function CartPage() {
   const {
@@ -75,7 +68,7 @@ function CartPage() {
                     
                     <h2>{item.name}</h2>
                     <p>{item.presentationName} · {item.size}</p>
-                    <p className="cart-item-price">{formatPrice(item.price)}</p>
+                    <p className="cart-item-price">{formatCurrency(item.price)}</p>
 
                     <div className="cart-quantity">
                       <label htmlFor={`cart-qty-${item.productId}-${item.presentationId}`}>
@@ -126,7 +119,7 @@ function CartPage() {
                   </div>
 
                   <p className="cart-item-subtotal">
-                    {formatPrice(item.price * item.quantity)}
+                    {formatCurrency(item.price * item.quantity)}
                   </p>
                 </article>
               );
@@ -143,7 +136,7 @@ function CartPage() {
 
             <div className="cart-summary-row">
               <span>Subtotal</span>
-              <span>{formatPrice(totalPrice)}</span>
+              <span>{formatCurrency(totalPrice)}</span>
             </div>
 
             <p className="cart-shipping-note">
@@ -152,7 +145,7 @@ function CartPage() {
 
             <div className="cart-summary-total">
               <span>Total parcial</span>
-              <strong>{formatPrice(totalPrice)}</strong>
+              <strong>{formatCurrency(totalPrice)}</strong>
             </div>
 
             <button

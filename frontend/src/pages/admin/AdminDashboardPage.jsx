@@ -5,6 +5,7 @@ import "./AdminDashboardPage.css";
 import AdminTopBar from "./components/ui/AdminTopBar";
 import AdminSidebar from "./AdminSidebar";
 import { useAdminStats } from "../../context/AdminStatsContext";
+import { formatCurrency, formatWeekday } from "../../utils/formatters";
 
 import {
   BarChart,
@@ -23,13 +24,6 @@ import {
   Package,
 } from "lucide-react";
 
-
-const formatCurrency = (value) =>
-  new Intl.NumberFormat("es-CO", {
-    style: "currency",
-    currency: "COP",
-    maximumFractionDigits: 0,
-  }).format(value ?? 0);
 
 const statusLabels = {
   PAGO_EN_REVISION: "Pago en revisión",
@@ -170,9 +164,7 @@ const chartData = useMemo(() => {
 
     return {
       date: dateKey,
-      day: date.toLocaleDateString("es-CO", {
-        weekday: "short",
-      }),
+      day: formatWeekday(date),
       sales: salesByDate.get(dateKey) || 0,
     };
   });
@@ -292,13 +284,9 @@ const chartData = useMemo(() => {
 
       <Tooltip
         formatter={(value) => [
-          new Intl.NumberFormat("es-CO", {
-            style: "currency",
-            currency: "COP",
-            maximumFractionDigits: 0,
-          }).format(value),
-          "Ventas",
-        ]}
+        formatCurrency(value),
+        "Ventas",
+       ]}
       />
 
       <Bar

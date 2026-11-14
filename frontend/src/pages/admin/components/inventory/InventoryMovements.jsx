@@ -1,3 +1,5 @@
+import { formatDate } from "../../../../utils/formatters";
+
 function InventoryMovements({
   filteredMovements,
   movements,
@@ -119,7 +121,7 @@ function InventoryMovements({
 
                   <td>{movement.usuario || "—"}</td>
 
-                  <td>{movement.fechaMovimiento || "—"}</td>
+                  <td>{formatDate(movement.fechaMovimiento)}</td>
 
                   <td>
                     {movement.documentoReferencia || "—"}

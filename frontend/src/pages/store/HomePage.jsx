@@ -4,18 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { apiRequest } from '../../services/api';
 import { useCart } from '../../context/CartContext';
 import './HomePage.css';
+import { formatCurrency } from "../../utils/formatters";
 
 const API_BASE_URL = (
   import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
 ).replace(/\/api\/?$/, '');
-
-function formatPrice(price) {
-  return Number(price).toLocaleString('es-CO', {
-    style: 'currency',
-    currency: 'COP',
-    maximumFractionDigits: 0,
-  });
-}
 
 function HomePage() {
   const [products, setProducts] = useState([]);
@@ -374,7 +367,7 @@ function HomePage() {
                         </p>
 
                         <p className="product-price">
-                          {formatPrice(presentation.retailPrice)}
+                          {formatCurrency(presentation.retailPrice)}
                         </p>
 
 

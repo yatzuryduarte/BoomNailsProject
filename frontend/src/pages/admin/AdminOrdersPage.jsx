@@ -7,24 +7,10 @@ import AdminTopBar from "./components/ui/AdminTopBar";
 import AdminSidebar from "./AdminSidebar";
 import { useAdminStats } from "../../context/AdminStatsContext";
 import { apiRequest } from "../../services/api";
+import { formatCurrency, formatDate } from "../../utils/formatters";
 
 const API_URL = "http://localhost:8080/api/admin/orders";
 
-const formatCurrency = (value) =>
-  new Intl.NumberFormat("es-CO", {
-    style: "currency",
-    currency: "COP",
-    maximumFractionDigits: 0,
-  }).format(value ?? 0);
-
-const formatDate = (value) => {
-  if (!value) return "—";
-
-  return new Date(value).toLocaleString("es-CO", {
-    dateStyle: "short",
-    timeStyle: "short",
-  });
-};
 
 const statusLabels = {
   PAGO_EN_REVISION: "Pago en revisión",

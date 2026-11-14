@@ -1,7 +1,9 @@
+import { formatDateTimeLocal } from "../../../utils/formatters";
+
 const createInitialPurchaseForm = () => ({
   supplierId: "",
   invoiceNumber: "",
-  purchaseDate: new Date().toISOString().slice(0, 16),
+  purchaseDate: formatDateTimeLocal(),
   notes: "",
   lines: [
     {
