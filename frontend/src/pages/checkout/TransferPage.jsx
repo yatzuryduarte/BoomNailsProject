@@ -4,14 +4,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { apiRequest } from '../../services/api';
 import './TransferPage.css';
+import { formatCurrency } from "../../utils/formatters";
 
-function formatPrice(price) {
-  return Number(price).toLocaleString('es-CO', {
-    style: 'currency',
-    currency: 'COP',
-    maximumFractionDigits: 0,
-  });
-}
 
 function TransferPage() {
   const location = useLocation();
@@ -207,14 +201,14 @@ function TransferPage() {
               </span>
 
               <strong>
-                {formatPrice(item.price * item.quantity)}
+                {formatCurrency(item.price * item.quantity)}
               </strong>
             </div>
           ))}
 
           <div className="transfer-total">
             <span>{totalItems} unidades</span>
-            <strong>{formatPrice(totalPrice)}</strong>
+            <strong>{formatCurrency(totalPrice)}</strong>
           </div>
 
           <p>El costo de envío se confirmará según tu dirección.</p>

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import './CheckoutPage.css';
+import { formatCurrency } from "../../utils/formatters";
 
 const INITIAL_FORM = {
   nombre: '',
@@ -15,14 +16,6 @@ const INITIAL_FORM = {
   pais: 'Colombia',
   observaciones: '',
 };
-
-function formatPrice(price) {
-  return Number(price).toLocaleString('es-CO', {
-    style: 'currency',
-    currency: 'COP',
-    maximumFractionDigits: 0,
-  });
-}
 
 function CheckoutPage() {
   const { cartItems, totalItems, totalPrice } = useCart();
@@ -133,7 +126,7 @@ function CheckoutPage() {
     if (paymentMethod === 'whatsapp') {
       const lines = cartItems.map(
         (item) =>
-          `- ${item.name} (${item.presentationName}) x ${item.quantity}: ${formatPrice(
+          `- ${item.name} (${item.presentationName}) x ${item.quantity}: ${formatCurrency(
             item.price * item.quantity
           )}`
       );
@@ -143,7 +136,7 @@ function CheckoutPage() {
         '',
         ...lines,
         '',
-        `Total: ${formatPrice(totalPrice)}`,
+        `Total: ${formatCurrency(totalPrice)}`,
         '',
         `Nombre: ${form.nombre.trim()}`,
         `Teléfono: ${form.telefono.trim()}`,
@@ -506,7 +499,7 @@ function CheckoutPage() {
               </span>
 
               <strong>
-                {formatPrice(
+                {formatCurrency(
                   item.price * item.quantity
                 )}
               </strong>
@@ -519,7 +512,7 @@ function CheckoutPage() {
             </span>
 
             <strong>
-              {formatPrice(totalPrice)}
+              {formatCurrency(totalPrice)}
             </strong>
           </div>
 

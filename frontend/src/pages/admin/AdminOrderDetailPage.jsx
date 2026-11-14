@@ -4,24 +4,9 @@ import { Link, useParams } from "react-router-dom";
 import { useAdminAuth } from "../../context/AdminAuthContext";
 import { apiRequest } from "../../services/api";
 import "./AdminOrderDetailPage.css";
+import { formatCurrency, formatDate } from "../../utils/formatters";
 
 const API_URL = "http://localhost:8080/api/admin/orders";
-
-const formatCurrency = (value) =>
-  new Intl.NumberFormat("es-CO", {
-    style: "currency",
-    currency: "COP",
-    maximumFractionDigits: 0,
-  }).format(value ?? 0);
-
-const formatDate = (value) => {
-  if (!value) return "—";
-
-  return new Date(value).toLocaleString("es-CO", {
-    dateStyle: "long",
-    timeStyle: "short",
-  });
-};
 
 const statusLabels = {
   PAGO_EN_REVISION: "Pago en revisión",

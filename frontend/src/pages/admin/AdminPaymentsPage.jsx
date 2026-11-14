@@ -6,13 +6,8 @@ import { useAdminAuth } from "../../context/AdminAuthContext";
 import { Link } from "react-router-dom";
 import AdminSidebar from "./AdminSidebar";
 import { apiRequest } from "../../services/api";
+import { formatCurrency, formatDateOnly } from "../../utils/formatters";
 
-const money = (value) =>
-  new Intl.NumberFormat("es-CO", {
-    style: "currency",
-    currency: "COP",
-    maximumFractionDigits: 0,
-  }).format(value ?? 0);
 
 function AdminPaymentsPage() {
   const { logout } = useAdminAuth();
@@ -262,7 +257,7 @@ return (
             </div>
 
             <strong className="bn-stat-money">
-              {money(totalPending)}
+              {formatCurrency(totalPending)}
             </strong>
 
             <small>
@@ -359,23 +354,12 @@ return (
                       </td>
 
                       <td>
-                        {payment.receiptUploadedAt
-                          ? new Date(
-                              payment.receiptUploadedAt
-                            ).toLocaleDateString(
-                              "es-CO",
-                              {
-                                day: "2-digit",
-                                month: "short",
-                                year: "numeric",
-                              }
-                            )
-                          : "—"}
+                        {formatDateOnly(payment.receiptUploadedAt)}
                       </td>
 
                       <td>
                         <strong className="bn-amount">
-                          {money(payment.amount)}
+                          {formatCurrency(payment.amount)}
                         </strong>
                       </td>
 
