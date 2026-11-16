@@ -1,0 +1,506 @@
+.bn-products-page {
+  padding: 28px;
+}
+
+.bn-products-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.bn-products-eyebrow {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.bn-products-header h1 {
+  margin: 0;
+}
+
+.bn-products-header p {
+  margin: 8px 0 0;
+}
+
+.bn-products-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.bn-product-stat-card {
+  padding: 20px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+}
+
+.bn-product-stat-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.bn-product-stat-card strong {
+  font-size: 24px;
+}
+
+.bn-products-card {
+  overflow: hidden;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+}
+
+.bn-products-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+  padding: 26px 32px 22px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.bn-products-toolbar > div:first-child {
+  flex: 1 1 auto;
+  min-width: 220px;
+}
+
+.bn-products-toolbar h2 {
+  margin: 0 0 5px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.bn-products-toolbar span {
+  font-size: 13px;
+}
+
+.bn-products-toolbar .bn-input {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 54px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0 18px;
+
+  border: 1px solid #dfe5ef;
+  border-radius: 12px;
+  background: #fff;
+
+  font-family: inherit;
+  font-size: 15px;
+  color: #102f68;
+
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.bn-products-toolbar .bn-input::placeholder {
+  color: #8b94a7;
+  opacity: 1;
+}
+
+.bn-products-toolbar .bn-input:hover {
+  border-color: #cbd5e1;
+}
+
+.bn-products-toolbar .bn-input:focus {
+  border-color: #8ec9e6;
+  box-shadow: 0 0 0 3px rgba(142, 201, 230, 0.15);
+}
+
+.bn-products-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.bn-products-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1100px;
+}
+
+.bn-products-table th,
+.bn-products-table td {
+  padding: 14px 16px;
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.bn-products-table th {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.bn-product-name-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 220px;
+}
+
+.bn-product-name-cell span {
+  font-size: 12px;
+}
+
+.bn-product-presentations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 130px;
+}
+
+.bn-product-presentation {
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  border: 1px solid #ddd;
+}
+
+.bn-product-status {
+  display: inline-flex;
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.bn-product-status.is-active {
+  background: #e9f7ef;
+}
+
+.bn-product-status.is-inactive {
+  background: #f4f4f4;
+}
+
+/* =========================================================
+   BOTONES DEL MÓDULO PRODUCTOS
+   ========================================================= */
+
+.bn-products-page .bn-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  min-height: 40px;
+  padding: 10px 16px;
+
+  border: 1px solid transparent;
+  border-radius: 10px;
+
+  font-family: "Manrope", sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.2;
+
+  white-space: nowrap;
+  cursor: pointer;
+
+  appearance: none;
+  -webkit-appearance: none;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+/* =========================================================
+   BOTÓN NUEVO PRODUCTO
+   ========================================================= */
+
+.bn-products-page .bn-btn-primary {
+  color: #ffffff;
+  background: #f23d91;
+  border-color: #f23d91;
+  box-shadow: 0 8px 18px rgba(242, 61, 145, 0.18);
+}
+
+.bn-products-page .bn-btn-primary:hover {
+  color: #ffffff;
+  background: #e52d83;
+  border-color: #e52d83;
+  box-shadow: 0 10px 22px rgba(242, 61, 145, 0.24);
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   BOTÓN EDITAR / REINTENTAR
+   ========================================================= */
+
+.bn-products-page .bn-btn-secondary {
+  color: #09265e;
+  background: #ffffff;
+  border-color: #d9e7f5;
+  box-shadow: 0 3px 10px rgba(27, 56, 105, 0.05);
+}
+
+.bn-products-page .bn-btn-secondary:hover {
+  color: #075b78;
+  background: #f5fbfe;
+  border-color: #b9ddea;
+  box-shadow: 0 5px 14px rgba(27, 56, 105, 0.08);
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   BOTÓN DESACTIVAR
+   ========================================================= */
+
+.bn-products-page .bn-btn-danger {
+  color: #e52d83;
+  background: #fff4f9;
+  border-color: #f6bfd9;
+}
+
+.bn-products-page .bn-btn-danger:hover {
+  color: #c91f6e;
+  background: #ffe8f2;
+  border-color: #ee9fc2;
+  box-shadow: 0 5px 14px rgba(242, 61, 145, 0.12);
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   BOTÓN ACTIVAR
+   ========================================================= */
+
+.bn-products-page .bn-btn-success {
+  color: #18794e;
+  background: #e8f7ef;
+  border-color: #c7ead8;
+}
+
+.bn-products-page .bn-btn-success:hover {
+  color: #12623f;
+  background: #d9f1e4;
+  border-color: #a9ddc1;
+  box-shadow: 0 5px 14px rgba(24, 121, 78, 0.12);
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   ACCIONES DE LA TABLA
+   ========================================================= */
+
+.bn-product-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.bn-product-actions .bn-btn {
+  min-height: 38px;
+  padding: 9px 14px;
+}
+
+/* =========================================================
+   BOTONES DEL MODAL
+   ========================================================= */
+
+.bn-product-modal-footer .bn-btn {
+  min-height: 40px;
+  padding: 10px 18px;
+}
+
+/* =========================================================
+   ESTADO DESHABILITADO
+   ========================================================= */
+
+.bn-products-page .bn-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.bn-products-message {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.bn-products-error {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid #e5baba;
+}
+
+@media (max-width: 1000px) {
+  .bn-products-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .bn-products-page {
+    padding: 18px;
+  }
+
+  .bn-products-header,
+  .bn-products-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .bn-products-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .bn-products-toolbar .bn-input {
+    width: 100%;
+  }
+}
+
+.bn-product-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.bn-product-modal {
+  width: min(850px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  padding: 24px;
+}
+
+.bn-product-modal-header,
+.bn-product-presentations-header,
+.bn-product-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.bn-product-modal-header {
+  margin-bottom: 24px;
+}
+
+.bn-product-modal-header h2 {
+  margin: 4px 0;
+}
+
+.bn-product-modal-header p,
+.bn-product-presentations-header p {
+  margin: 0;
+}
+
+.bn-product-modal-close {
+  border: 0;
+  background: transparent;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.bn-product-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.bn-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bn-form-field-full {
+  grid-column: 1 / -1;
+}
+
+.bn-form-field input,
+.bn-form-field select,
+.bn-form-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.bn-product-presentation-form {
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+}
+
+.bn-product-presentation-form-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.bn-product-remove-presentation {
+  border: 0;
+  background: transparent;
+  color: #d33;
+  cursor: pointer;
+}
+
+.bn-product-modal-footer {
+  justify-content: flex-end;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+@media (max-width: 700px) {
+  .bn-product-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bn-form-field-full {
+    grid-column: auto;
+  }
+}
+
+/* ---------- Encabezado ---------- */
+
+.bn-products-header {
+  margin-bottom: 28px;
+}
+
+.bn-products-header h1 {
+  margin: 0;
+  color: #0f2f68;
+  font-size: 44px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.bn-products-header p {
+  margin: 10px 0 0;
+  color: #7d91b6;
+  font-size: 16px;
+}

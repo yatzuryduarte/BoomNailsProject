@@ -8,7 +8,8 @@ public class ProductPresentation {
     private final Long id;
     private final Long productId;
     private final String name;
-    private final String size;
+    private final Integer volumeMl;
+    private final Integer unitsPerPackage;
     private final BigDecimal retailPrice;
     private final BigDecimal wholesalePrice;
     private final Integer stock;
@@ -18,7 +19,8 @@ public class ProductPresentation {
             Long id,
             Long productId,
             String name,
-            String size,
+            Integer volumeMl,
+            Integer unitsPerPackage,
             BigDecimal retailPrice,
             BigDecimal wholesalePrice,
             Integer stock,
@@ -32,6 +34,28 @@ public class ProductPresentation {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException(
                     "El nombre de la presentación es obligatorio");
+        }
+
+        if (volumeMl != null && volumeMl <= 0) {
+            throw new IllegalArgumentException(
+                    "El volumen debe ser mayor que cero");
+        }
+
+        if (unitsPerPackage != null && unitsPerPackage <= 0) {
+            throw new IllegalArgumentException(
+                    "La cantidad por paquete debe ser mayor que cero");
+        }
+
+        /*
+         * Una presentación debe definirse por volumen
+         * O por cantidad de unidades, pero no por ambos.
+         */
+        boolean hasVolume = volumeMl != null;
+        boolean hasUnits = unitsPerPackage != null;
+
+        if (hasVolume == hasUnits) {
+            throw new IllegalArgumentException(
+                    "La presentación debe tener volumen en ml o cantidad por paquete, pero no ambos");
         }
 
         if (retailPrice != null && retailPrice.signum() < 0) {
@@ -52,7 +76,8 @@ public class ProductPresentation {
         this.id = id;
         this.productId = productId;
         this.name = name;
-        this.size = size;
+        this.volumeMl = volumeMl;
+        this.unitsPerPackage = unitsPerPackage;
         this.retailPrice = retailPrice;
         this.wholesalePrice = wholesalePrice;
         this.stock = stock;
@@ -71,8 +96,12 @@ public class ProductPresentation {
         return name;
     }
 
-    public String getSize() {
-        return size;
+    public Integer getVolumeMl() {
+        return volumeMl;
+    }
+
+    public Integer getUnitsPerPackage() {
+        return unitsPerPackage;
     }
 
     public BigDecimal getRetailPrice() {
@@ -90,5 +119,24 @@ public class ProductPresentation {
     public boolean isActive() {
         return active;
     }
-}
 
+/**
+     * Mantiene compatibilidad con el frontend actual.
+     *
+     * Ejemplos:
+     * 8 ml
+     * 30 ml
+     * 240 unidades
+     */
+    public String getSize() {
+        if (volumeMl != null) {
+            return volumeMl + " ml";
+        }
+
+        if (unitsPerPackage != null) {
+            return unitsPerPackage + " unidades";
+        }
+
+        return "";
+    }
+}
