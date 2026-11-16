@@ -8,7 +8,8 @@ from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
 
 API = "http://localhost:8080/api"
-CARPETA = Path.home() / "Documents" / "images"
+BASE_DIR = Path(__file__).resolve().parent.parent
+CARPETA = BASE_DIR / "images"
 
 # Nombres de archivos que difieren de la referencia en la base de datos.
 ALIAS = {
