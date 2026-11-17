@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAdminAuth } from "../../context/AdminAuthContext";
+import "./components/ui/AdminCommon.css";
+import "./AdminLoginPage.css";
 
 const API_URL =
   import.meta.env.VITE_API_URL || "http://localhost:8080/api";
@@ -62,7 +64,7 @@ function AdminLoginPage() {
   };
 
   return (
-    <main className="bn-admin">
+    <main className="bn-admin-login">
       <div className="bn-login-card">
 
         <div className="bn-brand">
