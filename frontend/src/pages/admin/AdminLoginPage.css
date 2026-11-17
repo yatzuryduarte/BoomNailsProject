@@ -1,0 +1,386 @@
+/* =========================================================
+   BOOM NAILS - ADMIN LOGIN
+   Estilos exclusivos del portal administrativo
+   ========================================================= */
+
+.bn-admin-login {
+  min-height: 100vh;
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 40px 20px;
+
+  background:
+    radial-gradient(
+      circle at 15% 20%,
+      rgba(7, 139, 181, 0.08),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 85% 80%,
+      rgba(242, 61, 145, 0.08),
+      transparent 30%
+    ),
+    #f7f8fc;
+
+  font-family: "DM Sans", sans-serif;
+  color: #202b3c;
+
+  box-sizing: border-box;
+}
+
+.bn-admin-login *,
+.bn-admin-login *::before,
+.bn-admin-login *::after {
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   TARJETA
+   ========================================================= */
+
+.bn-login-card {
+  width: 100%;
+  max-width: 470px;
+
+  padding: 42px;
+
+  background: #ffffff;
+
+  border: 1px solid #edf0f5;
+  border-radius: 24px;
+
+  box-shadow:
+    0 25px 70px rgba(32, 43, 60, 0.10),
+    0 8px 24px rgba(32, 43, 60, 0.05);
+}
+
+
+/* =========================================================
+   MARCA
+   ========================================================= */
+
+.bn-login-card .bn-brand {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 30px;
+
+  color: #202b3c;
+
+  font-family: "Manrope", sans-serif;
+  font-size: 19px;
+  font-weight: 800;
+
+  letter-spacing: 1.8px;
+}
+
+.bn-login-card .bn-brand strong {
+  color: #078bb5;
+}
+
+.bn-brand-mark {
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+
+  color: #ffffff;
+
+  background: linear-gradient(
+    135deg,
+    #078bb5,
+    #075b78
+  );
+
+  font-size: 24px;
+  font-weight: 800;
+
+  box-shadow:
+    0 10px 24px rgba(7, 139, 181, 0.22);
+}
+
+
+/* =========================================================
+   ICONO DECORATIVO
+   ========================================================= */
+
+.bn-login-icon {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 12px;
+
+  border-radius: 50%;
+
+  color: #078bb5;
+
+  background: #e8f7fc;
+
+  font-size: 20px;
+}
+
+
+/* =========================================================
+   ENCABEZADO
+   ========================================================= */
+
+.bn-eyebrow {
+  margin: 0 0 10px;
+
+  color: #f23d91;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  letter-spacing: 2.5px;
+}
+
+.bn-login-card h1 {
+  margin: 0;
+
+  color: #202b3c;
+
+  font-family: "Manrope", sans-serif;
+
+  font-size: clamp(32px, 5vw, 42px);
+  font-weight: 800;
+
+  line-height: 1.1;
+
+  letter-spacing: -1.5px;
+}
+
+.bn-muted {
+  margin: 14px 0 0;
+
+  color: #8791a2;
+
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   FORMULARIO
+   ========================================================= */
+
+.bn-login-form {
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+
+  margin-top: 30px;
+}
+
+.bn-login-form label {
+  margin-top: 8px;
+
+  color: #465367;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.bn-login-form input {
+  width: 100%;
+
+  padding: 14px 15px;
+
+  border: 1px solid #e2e7ef;
+  border-radius: 11px;
+
+  outline: none;
+
+  background: #fbfcfe;
+  color: #202b3c;
+
+  font-family: inherit;
+  font-size: 13px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.bn-login-form input::placeholder {
+  color: #a4adba;
+}
+
+.bn-login-form input:focus {
+  border-color: #078bb5;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 0 0 3px rgba(7, 139, 181, 0.10);
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.bn-error {
+  margin: 6px 0 0;
+
+  padding: 12px;
+
+  border: 1px solid #ffd4cd;
+  border-radius: 10px;
+
+  color: #b42318;
+
+  background: #fff0ee;
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   BOTÓN
+   ========================================================= */
+
+.bn-primary-button {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: 12px;
+
+  padding: 15px 18px;
+
+  border: 0;
+  border-radius: 11px;
+
+  color: #ffffff;
+
+  background: linear-gradient(
+    110deg,
+    #f23d91,
+    #dc3182
+  );
+
+  box-shadow:
+    0 9px 20px rgba(242, 61, 145, 0.17);
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.bn-primary-button span {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.bn-primary-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 12px 24px rgba(242, 61, 145, 0.24);
+}
+
+.bn-primary-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.bn-primary-button:disabled {
+  opacity: 0.65;
+
+  cursor: wait;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.bn-login-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  margin: 28px 0 0;
+
+  padding-top: 20px;
+
+  border-top: 1px solid #edf0f5;
+
+  color: #8791a2;
+
+  font-size: 11px;
+}
+
+.bn-lock {
+  color: #078bb5;
+
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 600px) {
+  .bn-admin-login {
+    align-items: flex-start;
+
+    padding: 24px 15px;
+  }
+
+  .bn-login-card {
+    max-width: 100%;
+
+    padding: 30px 24px;
+
+    border-radius: 20px;
+  }
+
+  .bn-login-card h1 {
+    font-size: 32px;
+  }
+
+  .bn-login-card .bn-brand {
+    margin-bottom: 24px;
+  }
+}
+
+@media (max-width: 400px) {
+  .bn-login-card {
+    padding: 26px 20px;
+  }
+
+  .bn-login-card h1 {
+    font-size: 29px;
+  }
+}
